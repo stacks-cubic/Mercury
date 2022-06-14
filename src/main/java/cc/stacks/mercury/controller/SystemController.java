@@ -36,7 +36,7 @@ public class SystemController {
     @ResponseBody
     @GetMapping(value = "/init")
     public Transit<Object> initBase() {
-        if (!initState) return Transit.failure(10001);
+        if (!initState) return Transit.failure(10001,sysVersion);
         Map<String, String> data = new HashMap<>();
         data.put("name", sysName);
         data.put("version", sysVersion);
