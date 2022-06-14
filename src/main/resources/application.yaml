@@ -1,0 +1,27 @@
+server:
+  port: 20200
+  compression:
+    enabled: true
+    mime-types: text/plain,application/json,text/css,application/javascript,text/javascript,image/png,image/jpeg
+    min-response-size: 1KB
+  undertow:
+    threads:
+      io: 4
+      worker: 32
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-request-size: 1024MB
+      max-file-size: 1024MB
+  datasource:
+    url: jdbc:h2:mem:temp
+    driver-class-name: org.h2.Driver
+    username: SA
+    password:
+
+mercury:
+  init: false
+  name: Mercury
+  version: 1.0.0
