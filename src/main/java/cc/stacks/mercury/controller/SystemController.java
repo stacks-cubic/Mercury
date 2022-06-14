@@ -47,10 +47,10 @@ public class SystemController {
     @PostMapping(value = "/init")
     public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
         if (initState) return Transit.failure(10002);
-        if (TextUtil.isNull(dbUrl)) return Transit.failure(10010,"Database Url cannot be empty");
-        if (TextUtil.isNull(dbDriver)) return Transit.failure(10010,"Database Driver cannot be empty");
-        if (TextUtil.isNull(title)) return Transit.failure(10010,"Title cannot be empty");
-        if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10010,"Database Password cannot be empty");
+        if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database Url cannot be empty");
+        if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database Driver cannot be empty");
+        if (TextUtil.isNull(title)) return Transit.failure(10009,"Title cannot be empty");
+        if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database Password cannot be empty");
         return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword, title);
     }
 
