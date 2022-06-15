@@ -68,6 +68,14 @@ public class Transit<T> implements Serializable {
         return new Transit<>(false, code, null, null);
     }
 
+    public static <T> Transit<T> failure(int code,String message) {
+        return new Transit<>(false, code, message, null);
+    }
+
+    public static <T> Transit<T> failure(int code,T data) {
+        return new Transit<>(false, code, null, data);
+    }
+
     // 信息、数据中转
     public static <T> Transit<T> success(String message, T data) {
         return new Transit<>(true, null, message, data);

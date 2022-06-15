@@ -1,6 +1,6 @@
 import request from './request'
 import parser from 'ua-parser-js'
-// import md5 from 'js-md5'
+import md5 from 'js-md5'
 
 // 设备工具
 const device = {
@@ -16,6 +16,33 @@ const system = {
         return request({
             url: '/sys/init',
             method: 'GET'
+        })
+    },
+    testDb: form => {
+        let data = new URLSearchParams();
+        if(form.dbUrl) data.append('dbUrl', form.dbUrl);
+        if(form.dbUser) data.append('dbUser', form.dbUser);
+        if(form.dbPassword) data.append('dbPassword', form.dbPassword);
+        return request({
+            url: '/sys/init/db',
+            method: 'POST',
+            data
+        })
+    },
+    install: form => {
+        let data = new URLSearchParams();
+        if(form.dbUrl) data.append('dbUrl', form.dbUrl);
+        if(form.dbDriver) data.append('dbDriver', form.dbDriver);
+        if(form.dbUser) data.append('dbUser', form.dbUser);
+        if(form.dbPassword) data.append('dbPassword', form.dbPassword);
+        if(form.adminName) data.append('adminName', form.adminName);
+        if(form.adminNickname) data.append('adminNickname', form.adminNickname);
+        if(form.adminPassword) data.append('adminNickname', md5(form.adminPassword));
+        if(form.title) data.append('title', form.title);
+        return request({
+            url: '/sys/init',
+            method: 'POST',
+            data
         })
     }
 }

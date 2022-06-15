@@ -36,10 +36,10 @@ public class SystemController {
     @ResponseBody
     @GetMapping(value = "/init")
     public Transit<Object> initBase() {
-        if (!initState) return Transit.failure(10001,sysVersion);
         Map<String, String> data = new HashMap<>();
         data.put("name", sysName);
         data.put("version", sysVersion);
+        if (!initState) return Transit.failure(10001,data);
         return Transit.success(data);
     }
 
@@ -47,11 +47,21 @@ public class SystemController {
     @PostMapping(value = "/init")
     public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
         if (initState) return Transit.failure(10002);
-        if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database Url cannot be empty");
-        if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database Driver cannot be empty");
+        if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
+        if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database driver cannot be empty");
         if (TextUtil.isNull(title)) return Transit.failure(10009,"Title cannot be empty");
-        if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database Password cannot be empty");
+        if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
         return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword, title);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/init/db")
+    public Transit<Object> testDatabase(String dbUrl,String dbUser,String dbPassword) {
+        if (initState) return Transit.failure(10002);
+        if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
+        if (TextUtil.isNull(dbUser)) return Transit.failure(10009,"Database username cannot be empty");
+        if (TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
+        return systemService.testDatabase(dbUrl, dbUser, dbPassword);
     }
 
     @Access(admin = true)

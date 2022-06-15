@@ -21,17 +21,18 @@ export default {
   methods: {
     init() {
       this.$api.system.init().then(res => setTimeout(() => {
+        localStorage.setItem('app:info',JSON.stringify({name:res.data.name,version:res.data.version}))
         if (res.state) {
           this.closeLoading(10);
-          console.log(res);
         } else {
           if (res.code === 10001) {
             this.$router.push('/install');
-            this.closeLoading(150);
+            this.closeLoading(200);
           }
         }
       }, 300)).catch(err => {
-        console.log(err)
+        this.$router.replace('/error/'+(err === 'ERR_NETWORK' ? 'network':'unknown'));
+        this.closeLoading(150);
       })
     },
     closeLoading(off) {

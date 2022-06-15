@@ -47,11 +47,19 @@ public class SystemService {
                     .replace("${dbPassword}", TextUtil.isNull(dbPassword) ? "" : dbPassword)
                     .replace("${title}", title);
 
-            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword);
+            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword,false);
             if (transit.isState()) transit = writerConfigFile(path, config);
             if (transit.isState()) MercuryApplication.restart();
             return transit;
         } catch (Exception e) {
+            return Transit.failure();
+        }
+    }
+
+    public Transit<Object> testDatabase(String dbUrl, String dbUser, String dbPassword){
+        try {
+            return initDatabase(dbUrl,dbUser,dbPassword,false);
+        }catch (Exception e){
             return Transit.failure();
         }
     }
@@ -97,15 +105,19 @@ public class SystemService {
      * 初始化数据库
      *
      * @param url 数据库地址
+     * @param user 用户名
+     * @param password 密码
+     * @param install 是否安装
      * @return 初始化状态
      */
-    private Transit<Object> initDatabase(String url, String user, String password) {
+    private Transit<Object> initDatabase(String url, String user, String password,boolean install) {
         try (Connection conn = TextUtil.isNull(user) ? DriverManager.getConnection(url) : DriverManager.getConnection(url, user, password)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
                 Thread.sleep(1000);
                 LogUtil.info("Connection database: " + meta.getURL());
-                return initData(url, conn);
+                if(install) return initData(url, conn);
+                return Transit.success();
             }
             return Transit.failure(10005);
         } catch (Exception e) {

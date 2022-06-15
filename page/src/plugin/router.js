@@ -2,6 +2,11 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
     {
+        path: '/',
+        name: 'Loading',
+        component: () => import(/* webpackChunkName: "base" */ '../views/home')
+    },
+    {
         path: '/install',
         name: 'Install',
         component: () => import(/* webpackChunkName: "install" */ '../views/install'),
@@ -11,6 +16,16 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: () => import(/* webpackChunkName: "base" */ '../views/home')
+    },
+    {
+        path: '/error/:type',
+        name: 'Error',
+        component: () => import(/* webpackChunkName: "base" */ '../views/error'),
+        meta: {title: "Error"}
+    },
+    {
+        path: '/:pathMatch(.*)',
+        redirect: '/error/404'
     }
 ]
 
@@ -20,7 +35,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    document.title = (to.meta.title === undefined ? '' : to.meta.title + ' - ') + 'Mercury'
+    let info = localStorage.getItem('app:info');
+    if(info) info = JSON.parse(info);
+    let name = info ? info.name:'Mercury'
+    document.title = (to.meta.title === undefined ? '' : to.meta.title + ' - ') + name
     next()
 })
 

@@ -25,7 +25,7 @@ body {
   opacity: 0;
 }
 
-.loading{
+.loading {
   transition: all ease-out 0.3s;
   background-color: #ffffff;
   justify-content: center;
@@ -40,44 +40,90 @@ body {
   top: 0;
 }
 
-.loading.hide{
+.loading.hide {
   opacity: 0;
 }
 
-.text-center{
+.text-center {
   text-align: center;
 }
 
-.border-bottom{
+.border-bottom {
   border-bottom: 1px solid #eeeeee;
 }
 
-.pt-10{
-  padding-top: 10px;
-}
-
-.pb-10{
-  padding-bottom: 10px;
-}
-
-.py-10{
-  padding-bottom: 10px;
-  padding-top: 10px;
-}
-
-.pl-10{
-  padding-left: 10px;
-}
-
-.pr-10{
-  padding-right: 10px;
-}
-
-.px-10{
-  padding-right: 10px;
-  padding-left: 10px;
-}
-
-.pa-10{
+.pa-10 {
   padding: 10px;
+}
+
+.px-10 {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.py-10 {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.pt-10 {
+  padding-top: 10px;
+}
+
+.pb-10 {
+  padding-bottom: 10px;
+}
+
+.pl-10 {
+  padding-left: 10px;
+}
+
+.pr-10 {
+  padding-right: 10px;
+}
+
+.pa-20 {
+  padding: 20px;
+}
+
+.px-20 {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.py-20 {
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.pt-20 {
+  padding-top: 20px;
+}
+
+.pb-20 {
+  padding-bottom: 20px;
+}
+
+.pl-20 {
+  padding-left: 20px;
+}
+
+.pr-20 {
+  padding-right: 20px;
+}
+
+.float-right {
+  float: right;
+}
+
+.flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.text-gray {
+  color: #999;
 }
