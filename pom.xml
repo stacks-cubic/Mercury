@@ -85,6 +85,14 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.zerotier</groupId>
+            <artifactId>libzt</artifactId>
+            <version>1.8.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/libzt-1.8.4.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
