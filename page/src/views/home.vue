@@ -2,12 +2,27 @@
   <div class="blur" :class="{show:blur}"></div>
   <div class="background"></div>
   <div class="container">
-    <div class="pa-10 header">
-      <a-button>内网</a-button>
-      <div class="float-right">
-        <a-button class="mr-10" @click="switchBlur">{{ blur ? '透明' : '毛玻璃' }}</a-button>
-        <a-button class="mr-10">设置</a-button>
-        <a-button>我的</a-button>
+    <div class="pa-10 header flex align-center justify-between full-width">
+      <a-button type="text" class="flex align-center px-10" @click="switchInside">
+        <global-outlined style="font-size: 18px" v-if="inside"/>
+        <deployment-unit-outlined style="font-size: 18px" v-else/>
+        <div class="ml-5">{{ inside ? '切换外网' : '切换内网' }}</div>
+      </a-button>
+      <div class="flex align-center">
+        <a-button type="text" class="mr-10" :class="{active:blur}" shape="circle" @click="switchBlur">
+          <template #icon>
+            <bg-colors-outlined style="font-size: 18px"/>
+          </template>
+        </a-button>
+        <a-button type="text" class="mr-10" shape="circle">
+          <template #icon>
+            <setting-outlined style="font-size: 18px"/>
+          </template>
+        </a-button>
+        <a-button type="text" class="flex align-center px-10">
+          <user-outlined style="font-size: 18px"/>
+          <div class="nickname line1 ml-5">Skay Zhang</div>
+        </a-button>
       </div>
     </div>
     <div class="box">
@@ -79,7 +94,7 @@
             <div>网页小工具</div>
             <div class="text-small flex align-center" style="color: #5e5e5e;cursor: pointer">
               <span>查看全部</span>
-              <right-outlined style="fontSize: 10px;margin: -1px 3px 0 0" />
+              <right-outlined style="fontSize: 10px;margin: -1px 3px 0 0"/>
             </div>
           </div>
         </div>
@@ -88,7 +103,7 @@
             <a-collapse-panel key="1" header="书签组1">
               <div>书签组合1</div>
               <template #extra>
-                <setting-outlined />
+                <setting-outlined/>
               </template>
             </a-collapse-panel>
           </a-collapse>
@@ -98,7 +113,7 @@
             <a-collapse-panel key="1" header="书签组2">
               <div>书签组合2</div>
               <template #extra>
-                <setting-outlined />
+                <setting-outlined/>
               </template>
             </a-collapse-panel>
           </a-collapse>
@@ -109,11 +124,13 @@
 </template>
 
 <script>
-import { RightOutlined,SettingOutlined } from '@ant-design/icons-vue';
+import {RightOutlined, SettingOutlined, BgColorsOutlined, UserOutlined,GlobalOutlined,DeploymentUnitOutlined} from '@ant-design/icons-vue';
+
 export default {
   name: 'Home',
-  components:{RightOutlined,SettingOutlined},
+  components: {RightOutlined, SettingOutlined, BgColorsOutlined, UserOutlined,GlobalOutlined,DeploymentUnitOutlined},
   data: () => ({
+    inside: false,
     blur: false,
     type: 1,
     info: {
@@ -124,7 +141,7 @@ export default {
       type: 'google',
       keyword: ''
     },
-    open:['1']
+    open: ['1']
   }),
   methods: {
     init() {
@@ -133,6 +150,9 @@ export default {
     },
     switchBlur() {
       this.blur = !this.blur;
+    },
+    switchInside() {
+      this.inside = !this.inside;
     }
   },
   mounted() {
@@ -241,7 +261,7 @@ export default {
 }
 
 .mark-group,
-.tool-group{
+.tool-group {
   backdrop-filter: saturate(100%) blur(5px);
   background: rgba(255, 255, 255, 0.3);
   transition: all ease-in 0.3s;
@@ -250,16 +270,35 @@ export default {
 }
 
 .mark-group:hover,
-.tool-group:hover{
+.tool-group:hover {
   background: rgba(255, 255, 255, 0.7);
 }
 
-.tool-group .border-right{
+.tool-group .border-right {
   border-right: 1px solid #bdbdbd;
+}
+
+.active {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.header .nickname {
+  max-width: 60px;
 }
 </style>
 <style>
-.mark-group .ant-collapse-header{
+.mark-group .ant-collapse-header {
   padding: 10px 40px 10px 10px !important;
+}
+
+.container > .header .ant-btn-text {
+  backdrop-filter: saturate(100%) blur(5px);
+  background: rgba(255, 255, 255, 0.3);
+  color: #5b5b5b;
+}
+
+.container > .header .ant-btn-text:hover, .ant-btn-text:focus {
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
 }
 </style>

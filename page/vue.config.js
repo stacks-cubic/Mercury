@@ -4,6 +4,16 @@ module.exports = {
     productionSourceMap: !isProduction,
     css: {
         sourceMap: !isProduction,
+        loaderOptions: {
+            less: {
+                lessOptions: {
+                    modifyVars: {
+                        'border-radius-base': '8px',
+                    },
+                    javascriptEnabled: true,
+                },
+            },
+        },
     },
     configureWebpack: {
         optimization: {
