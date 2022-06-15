@@ -5,13 +5,13 @@
     <div class="pa-10 header">
       <a-button>内网</a-button>
       <div class="float-right">
-        <a-button class="mr-10" @click="switchBlur">{{blur ? '透明':'毛玻璃'}}</a-button>
+        <a-button class="mr-10" @click="switchBlur">{{ blur ? '透明' : '毛玻璃' }}</a-button>
         <a-button class="mr-10">设置</a-button>
         <a-button>我的</a-button>
       </div>
     </div>
     <div class="box">
-      <div class="title">{{info.name}}</div>
+      <div class="title">{{ info.name }}</div>
       <div class="search">
         <a-input-group compact>
           <a-input v-model:value="search.keyword" style="width: calc(100% - 60px)">
@@ -30,7 +30,7 @@
         <a-row :gutter="[10,10]" class="justify-center" v-if="type===1">
           <a-col :xs="12" :md="6" :lg="4">
             <div class="mark-item">
-              <img src="../assets/logo.png" class="mark-icon" />
+              <img src="../assets/logo.png" class="mark-icon"/>
               <div class="mark-info">
                 <div class="line1">内网服务标题</div>
                 <div class="text-small text-gray">内网服务信息</div>
@@ -39,7 +39,7 @@
           </a-col>
           <a-col :xs="12" :md="6" :lg="4">
             <div class="mark-item">
-              <img src="https://www.antdv.com/assets/logo.1ef800a8.svg" class="mark-icon" />
+              <img src="https://www.antdv.com/assets/logo.1ef800a8.svg" class="mark-icon"/>
               <div class="mark-info">
                 <div class="line1">内网服务标题</div>
               </div>
@@ -47,7 +47,7 @@
           </a-col>
           <a-col :xs="12" :md="6" :lg="4">
             <div class="mark-item">
-              <img src="../assets/logo.png" class="mark-icon" />
+              <img src="../assets/logo.png" class="mark-icon"/>
               <div class="mark-info">
                 <div class="line1">内网服务标题内网服务标题</div>
               </div>
@@ -57,33 +57,62 @@
         <a-row :gutter="[10,10]" class="justify-center" v-if="type===2">
           <a-col :xs="6" :md="3" :lg="2">
             <div class="mark-item-small">
-              <img src="../assets/logo.png" class="mark-icon" />
+              <img src="../assets/logo.png" class="mark-icon"/>
               <div class="mark-info line1">内网服务标题</div>
             </div>
           </a-col>
           <a-col :xs="6" :md="3" :lg="2">
             <div class="mark-item-small">
-              <img src="https://www.antdv.com/assets/logo.1ef800a8.svg" class="mark-icon" />
+              <img src="https://www.antdv.com/assets/logo.1ef800a8.svg" class="mark-icon"/>
               <div class="mark-info line1">内网服务标题</div>
             </div>
           </a-col>
           <a-col :xs="6" :md="3" :lg="2">
             <div class="mark-item-small">
-              <img src="../assets/logo.png" class="mark-icon" />
+              <img src="../assets/logo.png" class="mark-icon"/>
               <div class="mark-info line1">内网服务标题内网服务标题</div>
             </div>
           </a-col>
         </a-row>
-        <div class="mark-group"></div>
-        <div class="mark-group"></div>
+        <div class="tool-group flex align-center">
+          <div class="pa-10 border-right">
+            <div>网页小工具</div>
+            <div class="text-small flex align-center" style="color: #5e5e5e;cursor: pointer">
+              <span>查看全部</span>
+              <right-outlined style="fontSize: 10px;margin: -1px 3px 0 0" />
+            </div>
+          </div>
+        </div>
+        <div class="mark-group">
+          <a-collapse v-model:active-key="open[0]" expand-icon-position="right" ghost>
+            <a-collapse-panel key="1" header="书签组1">
+              <div>书签组合1</div>
+              <template #extra>
+                <setting-outlined />
+              </template>
+            </a-collapse-panel>
+          </a-collapse>
+        </div>
+        <div class="mark-group">
+          <a-collapse v-model:active-key="open[1]" expand-icon-position="right" ghost>
+            <a-collapse-panel key="1" header="书签组2">
+              <div>书签组合2</div>
+              <template #extra>
+                <setting-outlined />
+              </template>
+            </a-collapse-panel>
+          </a-collapse>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { RightOutlined,SettingOutlined } from '@ant-design/icons-vue';
 export default {
   name: 'Home',
+  components:{RightOutlined,SettingOutlined},
   data: () => ({
     blur: false,
     type: 1,
@@ -91,17 +120,18 @@ export default {
       name: 'Mercury',
       version: '0.0.0'
     },
-    search:{
+    search: {
       type: 'google',
       keyword: ''
-    }
+    },
+    open:['1']
   }),
   methods: {
     init() {
       let info = localStorage.getItem('app:info');
       this.info = JSON.parse(info);
     },
-    switchBlur(){
+    switchBlur() {
       this.blur = !this.blur;
     }
   },
@@ -112,56 +142,56 @@ export default {
 </script>
 <style scoped>
 .background,
-.blur{
+.blur {
   position: fixed;
   height: 100vh;
   width: 100vw;
   z-index: 1;
 }
 
-.background{
+.background {
   background: url("https://w.wallhaven.cc/full/y8/wallhaven-y8622k.jpg") no-repeat center center;
 }
 
-.blur{
+.blur {
   backdrop-filter: saturate(100%) blur(5px);
   transition: all ease-in 0.3s;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   opacity: 0;
   z-index: 2;
 }
 
-.show{
+.show {
   opacity: 1;
 }
 
-.container{
+.container {
   position: absolute;
   width: 100vw;
   z-index: 9;
 }
 
-.box{
+.box {
   max-width: 1000px;
   margin: 0 auto;
 }
 
-.title{
+.title {
   padding: 40px 0 20px 0;
   text-align: center;
   font-size: 56px;
   color: #fff;
 }
 
-.search{
+.search {
   padding: 0 10px 30px 10px;
   max-width: 700px;
   margin: 0 auto;
 }
 
-.mark-item{
+.mark-item {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   transition: all ease-in 0.3s;
   align-items: center;
   border-radius: 8px;
@@ -169,22 +199,22 @@ export default {
   display: flex;
 }
 
-.mark-item:hover{
-  background: rgba(255,255,255,1);
+.mark-item:hover {
+  background: rgba(255, 255, 255, 1);
 }
 
-.mark-icon{
+.mark-icon {
   border-radius: 8px;
   padding: 5px;
   height: 50px;
   width: 50px;
 }
 
-.mark-info{
+.mark-info {
   padding: 5px;
 }
 
-.mark-item-small{
+.mark-item-small {
   transition: all ease-in 0.3s;
   border-radius: 8px;
   text-align: center;
@@ -192,20 +222,43 @@ export default {
   color: #fff;
 }
 
-.mark-item-small .mark-icon{
+.mark-item-small .mark-icon {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   transition: all ease-in 0.3s;
 }
 
-.mark-item-small .mark-info{
+.mark-item-small .mark-info {
   padding: 2px 1px;
   max-width: 90px;
   margin: 0 auto;
 }
 
-.mark-item-small:hover{
+.mark-item-small:hover {
   background: #fff;
   color: #333;
+}
+
+.mark-group,
+.tool-group{
+  backdrop-filter: saturate(100%) blur(5px);
+  background: rgba(255, 255, 255, 0.3);
+  transition: all ease-in 0.3s;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.mark-group:hover,
+.tool-group:hover{
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.tool-group .border-right{
+  border-right: 1px solid #bdbdbd;
+}
+</style>
+<style>
+.mark-group .ant-collapse-header{
+  padding: 10px 40px 10px 10px !important;
 }
 </style>

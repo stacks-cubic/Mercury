@@ -48,8 +48,16 @@ body {
   text-align: center;
 }
 
+.border-top {
+  border-top: 1px solid #eeeeee;
+}
+
 .border-bottom {
   border-bottom: 1px solid #eeeeee;
+}
+
+.border-right {
+  border-right: 1px solid #eeeeee;
 }
 
 .pa-10 {
