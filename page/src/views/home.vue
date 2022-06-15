@@ -151,6 +151,7 @@ export default {
 
 .background {
   background: url("https://w.wallhaven.cc/full/y8/wallhaven-y8622k.jpg") no-repeat center center;
+  background-size: cover;
 }
 
 .blur {
