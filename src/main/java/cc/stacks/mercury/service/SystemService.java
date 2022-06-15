@@ -47,7 +47,7 @@ public class SystemService {
                     .replace("${dbPassword}", TextUtil.isNull(dbPassword) ? "" : dbPassword)
                     .replace("${title}", title);
 
-            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword,false);
+            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword,true);
             if (transit.isState()) transit = writerConfigFile(path, config);
             if (transit.isState()) MercuryApplication.restart();
             return transit;

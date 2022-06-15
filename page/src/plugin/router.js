@@ -4,7 +4,7 @@ const routes = [
     {
         path: '/',
         name: 'Loading',
-        component: () => import(/* webpackChunkName: "base" */ '../views/home')
+        component: () => import(/* webpackChunkName: "base" */ '../views/loading')
     },
     {
         path: '/install',

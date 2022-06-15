@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box no-select">
     <div class="card">
       <div class="pa-10 border-bottom">
         <div class="float-right">v{{ version }}</div>
@@ -14,7 +14,7 @@
       </div>
       <a-result v-if="state" status="warning" title="系统已安装" sub-title="如需重新安装, 请删除 Mercury 根目录下的 Yaml 配置文件">
         <template #extra>
-          <a-button type="primary" @click="$router.push('/')">欢迎使用</a-button>
+          <a-button type="primary" @click="$router.push('/home')">欢迎使用</a-button>
         </template>
       </a-result>
       <div class="form py-20 pr-20 pl-10" v-else>
@@ -65,7 +65,7 @@
         <a-form :label-col="label" v-show="current === 2">
           <a-result status="success" title="安装完成">
             <template #extra>
-              <a-button type="primary" @click="$router.push('/')">欢迎使用</a-button>
+              <a-button type="primary" @click="$router.push('/home')">欢迎使用</a-button>
               <a-button @click="$router.push('/console')">管理</a-button>
             </template>
           </a-result>

@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box no-select">
     <a-result :status="icon" :title="title" :sub-title="subTitle"/>
   </div>
 </template>
