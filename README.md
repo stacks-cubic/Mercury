@@ -14,3 +14,6 @@ An intranet portal with integrated intranet and outtranet dynamic bookmarking, g
 
 ## Interface design
 ![](doc/ui.jpg)
+
+## Screenshot
+![](doc/demo1.png)
