@@ -1,49 +1,113 @@
 package cc.stacks.mercury.service;
 
+import cc.stacks.mercury.config.SystemConfig;
+import cc.stacks.mercury.util.LogUtil;
+import cc.stacks.mercury.util.TextUtil;
 import com.zerotier.sockets.*;
+import org.springframework.boot.system.ApplicationHome;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.math.BigInteger;
 
 @Service
 public class ZerotierService {
 
-    // 这是一个zt的测试方法 - 内网穿透 and 反向代理...
-    public void test() {
+    private static ZeroTierNode node;
+    private static String ipv4;
+
+    /**
+     * 初始化
+     */
+    @Async("ZtTask")
+    public void init() {
+        // 获取配置信息
+        String config = SystemConfig.get("network:zt:id");
+        if (TextUtil.isNull(config)) {
+            LogUtil.warn("No ZeroTier config detected");
+            return;
+        }
+        LogUtil.info("Zt #0: Node starting...");
+        // 启动节点并等待上线
+        boolean state = startNode();
+        if (!state) return;
+        while (!node.isOnline()) {
+            ZeroTierNative.zts_util_delay(1000);
+        }
+        // 获取网络编号
+        long networkId = new BigInteger(config, 16).longValue();
+        LogUtil.info("Zt #" + Long.toHexString(node.getId()) + ": Connected to " + config + "...");
+        // 加入网络并等待连接就绪
+        node.join(networkId);
+        while (!node.isNetworkTransportReady(networkId)) {
+            ZeroTierNative.zts_util_delay(1000);
+        }
+        ipv4 = node.getIPv4Address(networkId).getHostAddress();
+        LogUtil.info("Zt #" + Long.toHexString(node.getId()) + ": Network connected, IP " + ipv4);
+    }
+
+    /**
+     * 启动节点
+     *
+     * @return 启动状态
+     */
+    public static boolean startNode() {
         try {
-            ZeroTierNode node = new ZeroTierNode();
-            // 加载身份标识
-            // node.initFromStorage(storagePath);
-
-            // 启动
+            if (node != null) stopNode();
+            node = new ZeroTierNode();
+            String path = new ApplicationHome().getDir().getPath();
+            node.initFromStorage(path + "/zt");
+            node.initSetEventHandler(new ZtEventListener());
             node.start();
-            // 等待上线
-            while (!node.isOnline()) {
-                ZeroTierNative.zts_util_delay(1000);
-            }
-            System.out.println("Node ID: " + Long.toHexString(node.getId()));
-            long networkId = 0xb6079f73c69c2e9cL;
-            // 加入网络
-            node.join(networkId);
-            while (!node.isNetworkTransportReady(networkId)) {
-                ZeroTierNative.zts_util_delay(1000);
-            }
-            System.out.println("IPv4 address: " + node.getIPv4Address(networkId).getHostAddress());
-            System.out.println("IPv6 address: " + node.getIPv6Address(networkId).getHostAddress());
-
-            // TCP Server
-            // ZeroTierServerSocket listener = new ZeroTierServerSocket(10980);
-            // ZeroTierSocket conn = listener.accept();
-            // ZeroTierInputStream inputStream = conn.getInputStream();
-            // DataInputStream dataInputStream = new DataInputStream(inputStream);
-            // String message = dataInputStream.readUTF();
-            // System.out.println("RX: " + message);
-            // listener.close();
-            // conn.close();
-
-            node.stop();
+            return true;
         } catch (Exception e) {
+            return false;
+        }
+    }
 
+    /**
+     * 停止节点
+     *
+     * @return 停止状态
+     */
+    public static boolean stopNode() {
+        try {
+            LogUtil.info("Zt #" + Long.toHexString(node.getId()) + ": Node close");
+            node.stop();
+            node = null;
+            ipv4 = null;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 获取状态
+     *
+     * @return 状态码 (-1发生异常,0未配置,1节点未启动,2网络未连接,3网络已连接)
+     */
+    public static int getState() {
+        try {
+            String config = SystemConfig.get("network:zt:id");
+            if (TextUtil.isNull(config)) return 0;
+            long networkId = new BigInteger(config, 16).longValue();
+            if (!node.isOnline()) return 1;
+            if (!node.isNetworkTransportReady(networkId)) return 2;
+            return 3;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public static int queryIP(String id){
+        try {
+            long peerId = new BigInteger(id, 16).longValue();
+            return ZeroTierNative.zts_core_query_path(peerId,1,"",1);
+        }catch (Exception e){
+            return 0;
         }
     }
 

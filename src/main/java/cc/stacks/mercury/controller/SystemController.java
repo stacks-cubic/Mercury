@@ -5,7 +5,6 @@ import cc.stacks.mercury.config.Access;
 import cc.stacks.mercury.service.SystemService;
 import cc.stacks.mercury.util.TextUtil;
 import cc.stacks.mercury.util.Transit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +32,7 @@ public class SystemController {
         this.systemService = systemService;
     }
 
+    // 获取初始化数据
     @ResponseBody
     @GetMapping(value = "/init")
     public Transit<Object> initBase() {
@@ -43,6 +43,7 @@ public class SystemController {
         return Transit.success(data);
     }
 
+    // 初始化系统
     @ResponseBody
     @PostMapping(value = "/init")
     public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
@@ -54,6 +55,7 @@ public class SystemController {
         return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword, title);
     }
 
+    // 测试连接数据库
     @ResponseBody
     @PostMapping(value = "/init/db")
     public Transit<Object> testDatabase(String dbUrl,String dbUser,String dbPassword) {
@@ -64,6 +66,7 @@ public class SystemController {
         return systemService.testDatabase(dbUrl, dbUser, dbPassword);
     }
 
+    // 重启系统
     @Access(admin = true)
     @ResponseBody
     @GetMapping(value = "/reboot")

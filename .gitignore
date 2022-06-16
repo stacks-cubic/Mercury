@@ -31,7 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-
+/zt/
 **/node_modules/
 **/static/
 /application.yaml

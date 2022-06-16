@@ -22,14 +22,13 @@ public class SystemConfig implements ServletContextAware {
     @Value("${mercury.init}")
     private Boolean initState;
     private final ConfigData configData;
-
     private static Map<String, String> configMap;
 
     public SystemConfig(ConfigData configData) {
         this.configData = configData;
     }
 
-    public static String get(String module, String key) {
+    public static String get(String key) {
         try {
             return configMap.get(key);
         } catch (Exception e) {
@@ -37,7 +36,7 @@ public class SystemConfig implements ServletContextAware {
         }
     }
 
-    public static boolean getBoolean(String module, String key) {
+    public static boolean getBoolean(String key) {
         try {
             if (configMap.get(key).length() == 1) return configMap.get(key).equals("1");
             return configMap.get(key).equals("true");
@@ -46,7 +45,7 @@ public class SystemConfig implements ServletContextAware {
         }
     }
 
-    public static int getInt(String module, String key) {
+    public static int getInt(String key) {
         try {
             return Integer.parseInt(configMap.get(key));
         } catch (Exception e) {
@@ -54,7 +53,7 @@ public class SystemConfig implements ServletContextAware {
         }
     }
 
-    public static double getDouble(String module, String key) {
+    public static double getDouble(String key) {
         try {
             return Double.parseDouble(configMap.get(key));
         } catch (Exception e) {
@@ -62,7 +61,7 @@ public class SystemConfig implements ServletContextAware {
         }
     }
 
-    public static long getLong(String module, String key) {
+    public static long getLong(String key) {
         try {
             return Long.parseLong(configMap.get(key));
         } catch (Exception e) {

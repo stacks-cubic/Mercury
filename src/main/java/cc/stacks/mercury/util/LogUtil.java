@@ -45,7 +45,7 @@ public class LogUtil {
 
     private static void out(String type, String message) {
         StackTraceElement[] stackTrace = new Exception().getStackTrace();
-        Logger logger = LoggerFactory.getLogger(stackTrace[2].getClassName());
+        Logger logger = LoggerFactory.getLogger(stackTrace[3].getClassName());
         switch (type) {
             case "info" -> logger.info(message);
             case "warn" -> logger.warn(message);
