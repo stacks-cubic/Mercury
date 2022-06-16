@@ -1,21 +1,21 @@
 package cc.stacks.mercury.config;
 
-import cc.stacks.mercury.service.ZerotierService;
+import cc.stacks.mercury.service.ZtCoreService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StartConfig implements CommandLineRunner {
 
-    private final ZerotierService zerotierService;
+    private final ZtCoreService ztCoreService;
 
-    public StartConfig(ZerotierService zerotierService) {
-        this.zerotierService = zerotierService;
+    public StartConfig(ZtCoreService ztCoreService) {
+        this.ztCoreService = ztCoreService;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        zerotierService.init();
+        ztCoreService.init();
     }
 
 }

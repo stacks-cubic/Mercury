@@ -14,7 +14,7 @@ public class AsyncConfig {
 
     @Bean("ZtTask")
     public Executor noticeExecutor() {
-        ThreadPoolTaskExecutor executor = buildExecutor(1,2,4,8);
+        ThreadPoolTaskExecutor executor = buildExecutor(2,3,6,10);
         executor.setThreadNamePrefix("zt-task-");
         executor.initialize();
         return executor;

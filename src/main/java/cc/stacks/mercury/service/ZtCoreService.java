@@ -8,15 +8,13 @@ import org.springframework.boot.system.ApplicationHome;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.math.BigInteger;
 
 @Service
-public class ZerotierService {
+public class ZtCoreService {
 
     private static ZeroTierNode node;
-    private static String ipv4;
+    public static String ipv4;
 
     /**
      * 初始化
@@ -99,15 +97,6 @@ public class ZerotierService {
             return 3;
         } catch (Exception e) {
             return -1;
-        }
-    }
-
-    public static int queryIP(String id){
-        try {
-            long peerId = new BigInteger(id, 16).longValue();
-            return ZeroTierNative.zts_core_query_path(peerId,1,"",1);
-        }catch (Exception e){
-            return 0;
         }
     }
 

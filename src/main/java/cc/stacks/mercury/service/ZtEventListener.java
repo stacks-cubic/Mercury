@@ -19,7 +19,7 @@ public class ZtEventListener implements ZeroTierEventListener {
         else if(code == ZeroTierNative.ZTS_EVENT_ADDR_ADDED_IP4) tips += "A new managed IPv4 address was assigned to this peer"; // 260
         else if (code == ZeroTierNative.ZTS_EVENT_STORE_PLANET) tips += "The node has received an updated planet config"; // 272
         else if (code == ZeroTierNative.ZTS_EVENT_NETWORK_NOT_FOUND) {
-            ZerotierService.stopNode();
+            ZtCoreService.stopNode();
         }
         else return;
         // 输出其他代码
