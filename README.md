@@ -10,10 +10,10 @@ An intranet portal with integrated intranet and outtranet dynamic bookmarking, g
 - [ ] Back-end Development
 
 ## Structure
-![](doc/structure.jpg)
+![](doc/structure.png)
 
 ## Interface design
-![](doc/ui.jpg)
+![](doc/ui.png)
 
 ## Screenshot
-![](doc/demo1.png)
+![](doc/demo1.jpeg)
