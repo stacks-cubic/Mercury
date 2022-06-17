@@ -25,7 +25,14 @@ public class ProxyController {
     @ResponseBody
     @GetMapping(value = "/**")
     public void proxyGet(HttpServletRequest request, HttpServletResponse response) {
-        ztSocketService.httpProxy("192.168.192.1",9820,request, response);
+        String host = request.getHeader("Host");
+        if("192.168.1.160:20200".equals(host)) ztSocketService.httpProxy("192.168.192.1",9828,request, response);
+        else {
+            try {
+                response.setStatus(404);
+                response.flushBuffer();
+            }catch (Exception ignored){}
+        }
     }
 
 }

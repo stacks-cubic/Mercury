@@ -1,5 +1,7 @@
 package cc.stacks.mercury.config;
 
+import cc.stacks.mercury.service.ZtSocketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,12 +20,20 @@ import java.lang.reflect.Method;
 @Component
 public class AccessInterceptor implements HandlerInterceptor {
 
+    private final ZtSocketService ztSocketService;
+
+    public AccessInterceptor(ZtSocketService ztSocketService) {
+        this.ztSocketService = ztSocketService;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // Controller 执行之前触发
-        if (!(handler instanceof HandlerMethod)) return true;
-        Method method = ((HandlerMethod) handler).getMethod();
-        return true;
+        String host = request.getHeader("Host");
+        if ("192.168.1.160:20200".equals(host)) {
+            ztSocketService.httpProxy("192.168.192.1", 9828, request, response);
+            return false;
+        } else if (!(handler instanceof HandlerMethod)) return true;
+        else return true;
     }
 
     @Override
