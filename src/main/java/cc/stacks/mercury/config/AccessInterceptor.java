@@ -1,6 +1,7 @@
 package cc.stacks.mercury.config;
 
-import cc.stacks.mercury.service.ZtSocketService;
+import cc.stacks.mercury.service.ProxyService;
+import cc.stacks.mercury.service.zerotier.ZtSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -9,7 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
 
 /**
  * 访问控制拦截器
@@ -21,16 +21,19 @@ import java.lang.reflect.Method;
 public class AccessInterceptor implements HandlerInterceptor {
 
     private final ZtSocketService ztSocketService;
+    private final ProxyService proxyService;
 
-    public AccessInterceptor(ZtSocketService ztSocketService) {
+    public AccessInterceptor(ZtSocketService ztSocketService, ProxyService proxyService) {
         this.ztSocketService = ztSocketService;
+        this.proxyService = proxyService;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String host = request.getHeader("Host");
         if ("192.168.1.160:20200".equals(host)) {
-            ztSocketService.httpProxy("192.168.192.1", 9828, request, response);
+            proxyService.run("192.168.192.1", 9828, request, response);
+//            ztSocketService.httpProxy("192.168.192.1", 9828, request, response);
             return false;
         } else if (!(handler instanceof HandlerMethod)) return true;
         else return true;

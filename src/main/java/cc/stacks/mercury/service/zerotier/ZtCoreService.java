@@ -1,4 +1,4 @@
-package cc.stacks.mercury.service;
+package cc.stacks.mercury.service.zerotier;
 
 import cc.stacks.mercury.config.SystemConfig;
 import cc.stacks.mercury.util.LogUtil;

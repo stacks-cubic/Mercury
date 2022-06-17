@@ -1,4 +1,4 @@
-package cc.stacks.mercury.service;
+package cc.stacks.mercury.service.zerotier;
 
 import cc.stacks.mercury.util.TextUtil;
 import com.zerotier.sockets.*;
@@ -84,7 +84,7 @@ public class ZtSocketService {
                     String key = resMsg.substring(0, resMsg.indexOf(": "));
                     String value = resMsg.substring(resMsg.indexOf(": ") + 1).trim();
                     if (key.equalsIgnoreCase("content-type")) response.setContentType(value);
-                    else if (!TextUtil.isNull(names) && !TextUtil.isNull(value)) response.setHeader(key, value);
+                    else if (!TextUtil.isNull(key) && !TextUtil.isNull(value)) response.setHeader(key, value);
                 }
             }
             response.setContentLength(cache.size());

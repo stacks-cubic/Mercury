@@ -1,6 +1,6 @@
 package cc.stacks.mercury.config;
 
-import cc.stacks.mercury.service.ZtCoreService;
+import cc.stacks.mercury.service.zerotier.ZtCoreService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

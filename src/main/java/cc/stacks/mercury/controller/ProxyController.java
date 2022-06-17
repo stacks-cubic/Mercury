@@ -1,6 +1,6 @@
 package cc.stacks.mercury.controller;
 
-import cc.stacks.mercury.service.ZtSocketService;
+import cc.stacks.mercury.service.zerotier.ZtSocketService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
