@@ -37,20 +37,19 @@ public class ZtSocketService {
             msg.append("\r\n");
             // 创建连接
             ZeroTierSocket socket = new ZeroTierSocket(2, ZeroTierNative.ZTS_SOCK_STREAM, 0);
-            socket.setSoTimeout(10000);
             socket.connect(ip, port);
             // 创建输入流
             ZeroTierOutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             // 发送请求
-            dataOutputStream.write(msg.toString().replace("\r\n\r\n\r\n", "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+            dataOutputStream.write(msg.toString().getBytes(StandardCharsets.UTF_8));
             // 创建输出流
             ZeroTierInputStream in = socket.getInputStream();
-            socket.shutdownOutput();
             // 创建换行标识
             byte[] line = "\r\n".getBytes();
             // 获取输入字节
             ByteArrayOutputStream dataOut = new ByteArrayOutputStream();
+            socket.shutdownOutput();
             in.transferTo(dataOut);
             in.close();
             byte[] data = dataOut.toByteArray();
@@ -98,6 +97,7 @@ public class ZtSocketService {
 
     public void out(HttpServletResponse response, ByteArrayOutputStream cache) {
         byte[] all = cache.toByteArray();
+        System.out.println(new String(all,StandardCharsets.UTF_8));
         ByteArrayInputStream input = new ByteArrayInputStream(all);
         try {
             int now = 0;
@@ -108,10 +108,6 @@ public class ZtSocketService {
                 now++;
                 int number = input.read(data);
                 if (number < 0) continue;
-
-                System.out.println(now);
-                System.out.println("---------------------->" + new String(data, StandardCharsets.UTF_8));
-
                 outputStream.write(data, 0, number);
                 outputStream.flush();
             }
