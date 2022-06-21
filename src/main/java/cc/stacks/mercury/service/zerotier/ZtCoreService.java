@@ -21,10 +21,13 @@ public class ZtCoreService {
      */
     @Async("ZtTask")
     public void init() {
+        // 获取代理模式
+        int proxyMode = SystemConfig.getInt("network:proxy:mode");
+        if (proxyMode != 2) return;
         // 获取配置信息
         String config = SystemConfig.get("network:zt:id");
         if (TextUtil.isNull(config)) {
-            LogUtil.warn("No ZeroTier config detected");
+            LogUtil.info("No ZeroTier config detected");
             return;
         }
         LogUtil.info("Zt #0: Node starting...");
