@@ -1,6 +1,8 @@
 package cc.stacks.mercury.config;
 
 import cc.stacks.mercury.service.ProxyService;
+import cc.stacks.mercury.util.TextUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -26,24 +28,30 @@ public class AccessInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (!(handler instanceof HandlerMethod)) return true;
         String host = request.getHeader("Host");
-        if ("192.168.1.160:20200".equals(host)) {
-            // 穿透
-            proxyService.pierce("192.168.192.1", 9820, request, response);
-            // 直连
-//            proxyService.direct("192.168.1.200", 9820, request, response);
+        // 获取代理模式
+        int proxyMode = SystemConfig.getInt("network:proxy:mode");
+        // 代理指定来源
+        if ("127.0.0.1:20200".equals(host)) {
+            if (proxyMode == 1) proxyService.direct("192.168.1.200", 9820, request, response);
+            else if (proxyMode == 2 && !TextUtil.isNull(SystemConfig.get("network:zt:id")))
+                proxyService.pierce("192.168.192.1", 9820, request, response);
+            else return true;
             return false;
-        } else if (!(handler instanceof HandlerMethod)) return true;
-        else return true;
+        }
+        return true;
     }
 
     @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) {
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object
+            o, ModelAndView modelAndView) {
         // Controller 执行完毕后触发
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse
+            httpServletResponse, Object o, Exception e) {
         // DispatcherServlet 渲染视图之后触发(用不到)
     }
 
