@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SystemService {
@@ -47,7 +49,13 @@ public class SystemService {
                     .replace("${dbPassword}", TextUtil.isNull(dbPassword) ? "" : dbPassword)
                     .replace("${title}", title);
 
-            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword,true);
+            Map<String, String> data = new HashMap<>();
+            data.put("adminName", adminName);
+            data.put("adminNickname", adminNickname);
+            data.put("adminPassword", adminPassword);
+            data.put("addTime", ""+System.currentTimeMillis());
+
+            if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword, data);
             if (transit.isState()) transit = writerConfigFile(path, config);
             if (transit.isState()) MercuryApplication.restart();
             return transit;
@@ -56,10 +64,18 @@ public class SystemService {
         }
     }
 
-    public Transit<Object> testDatabase(String dbUrl, String dbUser, String dbPassword){
+    /**
+     * 测试数据库连接
+     *
+     * @param dbUrl      数据库地址
+     * @param dbUser     数据库用户名
+     * @param dbPassword 数据库密码
+     * @return 连接响应
+     */
+    public Transit<Object> testDatabase(String dbUrl, String dbUser, String dbPassword) {
         try {
-            return initDatabase(dbUrl,dbUser,dbPassword,false);
-        }catch (Exception e){
+            return initDatabase(dbUrl, dbUser, dbPassword, null);
+        } catch (Exception e) {
             return Transit.failure();
         }
     }
@@ -104,19 +120,19 @@ public class SystemService {
     /**
      * 初始化数据库
      *
-     * @param url 数据库地址
-     * @param user 用户名
+     * @param url      数据库地址
+     * @param user     用户名
      * @param password 密码
-     * @param install 是否安装
+     * @param data     安装数据
      * @return 初始化状态
      */
-    private Transit<Object> initDatabase(String url, String user, String password,boolean install) {
+    private Transit<Object> initDatabase(String url, String user, String password, Map<String, String> data) {
         try (Connection conn = TextUtil.isNull(user) ? DriverManager.getConnection(url) : DriverManager.getConnection(url, user, password)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
                 Thread.sleep(1000);
                 LogUtil.info("Connection database: " + meta.getURL());
-                if(install) return initData(url, conn);
+                if (data != null) return initData(url, conn, data);
                 return Transit.success();
             }
             return Transit.failure(10005);
@@ -128,12 +144,14 @@ public class SystemService {
     /**
      * 初始化数据
      *
+     * @param url  数据库地址
      * @param conn 数据库连接
+     * @param data 安装数据
      * @return 初始化状态
      */
-    private Transit<Object> initData(String url, Connection conn) {
+    private Transit<Object> initData(String url, Connection conn, Map<String, String> data) {
         try {
-            StringBuilder sql = new StringBuilder();
+            StringBuilder sqlBuilder = new StringBuilder();
             Statement statement = conn.createStatement();
             LogUtil.info("Create initial data...");
             InputStream input = null;
@@ -143,10 +161,14 @@ public class SystemService {
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input))) {
                 String temp;
                 while ((temp = bufferedReader.readLine()) != null) {
-                    if (!temp.startsWith("--")) sql.append(temp);
+                    if (!temp.startsWith("--")) sqlBuilder.append(temp);
                     if (temp.endsWith(";")) {
-                        statement.execute(sql.toString());
-                        sql = new StringBuilder();
+                        String sql = sqlBuilder.toString();
+                        for (Map.Entry<String, String> item : data.entrySet()) {
+                            sql = sql.replace("${" + item.getKey() + "}", "'" + item.getValue() + "'");
+                        }
+                        statement.execute(sql);
+                        sqlBuilder = new StringBuilder();
                     }
                 }
                 LogUtil.info("Create initial data complete");

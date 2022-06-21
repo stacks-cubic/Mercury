@@ -37,7 +37,7 @@ const system = {
         if(form.dbPassword) data.append('dbPassword', form.dbPassword);
         if(form.adminName) data.append('adminName', form.adminName);
         if(form.adminNickname) data.append('adminNickname', form.adminNickname);
-        if(form.adminPassword) data.append('adminNickname', md5(form.adminPassword));
+        if(form.adminPassword) data.append('adminPassword', md5(form.adminPassword));
         if(form.title) data.append('title', form.title);
         return request({
             url: '/sys/init',

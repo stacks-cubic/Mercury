@@ -38,7 +38,8 @@ insert into `config`(`id`, `key`, `value`)
 values (1, 'db:version', '1.0.0'),
        (2, 'user:register:url', '0'),
        (3, 'user:register:oauth2', '0'),
-       (4, 'network:zt:id', '');
+       (4, 'network:proxy:mode', '0'),
+       (5, 'network:zt:id', '');
 -- 创建初始管理员
 insert into user(`id`, `name`, `nickname`, `password`, `admin`, `add_time`)
-values (61201, 'admin', 'Administrator', 'c3284d0f94606de1fd2af172aba15bf3', 1, 1655116201000);
+values (61201, ${adminName}, ${adminNickname}, ${adminPassword}, 1, ${addTime});
