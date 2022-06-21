@@ -4,6 +4,7 @@ import cc.stacks.mercury.data.ConfigData;
 import cc.stacks.mercury.model.Config;
 import cc.stacks.mercury.util.LogUtil;
 import cc.stacks.mercury.util.ServerUtil;
+import cc.stacks.mercury.util.TextUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ServletContextAware;
@@ -72,6 +73,7 @@ public class SystemConfig implements ServletContextAware {
     public static void loadConfig(List<Config> data) {
         Map<String, String> cacheMap = new HashMap<>();
         if (data != null) for (Config config : data) {
+            if (TextUtil.isNull(config.getValue())) continue;
             cacheMap.put(config.getKey(), config.getValue());
         }
         configMap = cacheMap;
@@ -90,7 +92,7 @@ public class SystemConfig implements ServletContextAware {
                 StringBuilder tips = new StringBuilder("Not yet initialized\n========================================\n");
                 tips.append("Please complete the initial config first\n");
                 List<String> ipv4List = ServerUtil.getIpv4Addresses();
-                for (String ip : ipv4List){
+                for (String ip : ipv4List) {
                     tips.append("-> http://").append(ip).append(":").append(port).append("/install\n");
                 }
                 tips.append("========================================");

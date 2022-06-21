@@ -1,6 +1,6 @@
 package cc.stacks.mercury.controller;
 
-import cc.stacks.mercury.service.ZtCoreService;
+import cc.stacks.mercury.service.zerotier.ZtCoreService;
 import cc.stacks.mercury.util.Transit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

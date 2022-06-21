@@ -1,7 +1,6 @@
 package cc.stacks.mercury.config;
 
-import cc.stacks.mercury.service.ZtSocketService;
-import org.springframework.beans.factory.annotation.Autowired;
+import cc.stacks.mercury.service.ProxyService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,15 +14,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    private final ZtSocketService ztSocketService;
+    private final ProxyService proxyService;
 
-    public InterceptorConfig(ZtSocketService ztSocketService) {
-        this.ztSocketService = ztSocketService;
+    public InterceptorConfig(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AccessInterceptor(ztSocketService)).addPathPatterns("/**");
+        registry.addInterceptor(new AccessInterceptor(proxyService)).addPathPatterns("/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
