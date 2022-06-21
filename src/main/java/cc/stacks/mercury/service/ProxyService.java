@@ -39,8 +39,6 @@ public class ProxyService {
             send(ip, port, request, new DataOutputStream(proxyOutput));
             // 关闭输入流
             proxyOutput.close();
-            // 关闭输出
-            socket.shutdownOutput();
             // 处理Http响应
             handleHttp(response, socket.getInputStream());
         } catch (Exception e) {
@@ -72,21 +70,19 @@ public class ProxyService {
             OutputStream proxyOutput = socket.getOutputStream();
             // 发送请求
             send(ip, port, request, new DataOutputStream(proxyOutput));
-            // 关闭输入流
-            proxyOutput.close();
-            // 关闭输出
-            socket.shutdownOutput();
             // 处理Http响应
             handleHttp(response, socket.getInputStream());
         } catch (Exception e) {
+            e.printStackTrace();
             LogUtil.warn("Socket 连接异常");
         }
     }
 
     /**
      * 处理http响应
+     *
      * @param response 响应
-     * @param in 输入流
+     * @param in       输入流
      */
     private void handleHttp(HttpServletResponse response, InputStream in) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -103,7 +99,7 @@ public class ProxyService {
                         out = new ByteArrayOutputStream();
                     } else end = true;
                     next = false;
-                } else if (num >= 0) {
+                } else if (num != -1) {
                     out.write(num);
                     next = false;
                 }
@@ -146,15 +142,69 @@ public class ProxyService {
      * @param out      响应体
      */
     private void receive(HttpServletResponse response, List<ByteArrayOutputStream> header, ByteArrayOutputStream out) {
-        try (out) {
+        try {
             OutputStream clientOutput = response.getOutputStream();
             response.reset();
+            // 构建响应头
             buildHeader(response, header, out.size());
+            // 解码响应体
+            out = encoding(response, out);
+            // 输出响应
             if (out.size() > 1) clientOutput.write(out.toByteArray());
             else out.close();
+            // 刷新流
             clientOutput.flush();
         } catch (IOException ex) {
-            LogUtil.warn("连接断开");
+            // 连接断开
+        } finally {
+            if (out != null) try {
+                out.close();
+            } catch (Exception ignored) {
+                // 流异常
+            }
+        }
+    }
+
+    /**
+     * 解码
+     * @param response 响应
+     * @param out 输出
+     * @return 解码后的字节流
+     */
+    private ByteArrayOutputStream encoding(HttpServletResponse response, ByteArrayOutputStream out) {
+        try {
+            String tag = response.getHeader("Transfer-Encoding");
+            if (out.size() == 0 || TextUtil.isNull(tag)) return out;
+            if (tag.equals("chunked")) {
+                int length = 0;
+                byte[] code = out.toByteArray();
+                StringBuilder body = new StringBuilder();
+                ByteArrayOutputStream cache = new ByteArrayOutputStream();
+                for (int i = 0; i < code.length; i++) {
+                    if (i < length) cache.write(code[i]);
+                    else if (i == length && cache.size() > 0) {
+                        cache.write(code[i]);
+                        cache.write(code[i + 1]);
+                        body.append(cache.toString(StandardCharsets.UTF_8));
+                        cache.close();
+                        cache = new ByteArrayOutputStream();
+                        i++;
+                    } else if (cache.size() > 0 && code.length >= i + 1 && code[i] == 13 && code[i + 1] == 10) {
+                        length = Integer.decode("0x" + cache.toString(StandardCharsets.UTF_8).replace("\r\n","")) + i;
+                        cache.close();
+                        cache = new ByteArrayOutputStream();
+                        i++;
+                    } else cache.write(code[i]);
+                }
+                out.close();
+                cache.close();
+                cache = new ByteArrayOutputStream();
+                cache.writeBytes(body.toString().getBytes(StandardCharsets.UTF_8));
+                return cache;
+            }
+            return out;
+        } catch (Exception e) {
+            return out;
         }
     }
 

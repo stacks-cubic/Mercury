@@ -1,7 +1,6 @@
 package cc.stacks.mercury.config;
 
 import cc.stacks.mercury.service.ProxyService;
-import cc.stacks.mercury.service.zerotier.ZtSocketService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,11 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AccessInterceptor implements HandlerInterceptor {
 
-    private final ZtSocketService ztSocketService;
     private final ProxyService proxyService;
 
-    public AccessInterceptor(ZtSocketService ztSocketService, ProxyService proxyService) {
-        this.ztSocketService = ztSocketService;
+    public AccessInterceptor(ProxyService proxyService) {
         this.proxyService = proxyService;
     }
 
