@@ -1,7 +1,7 @@
 package cc.stacks.mercury.service;
 
+import cc.stacks.mercury.util.LogUtil;
 import cc.stacks.mercury.util.TextUtil;
-import com.zerotier.sockets.ZeroTierInputStream;
 import com.zerotier.sockets.ZeroTierNative;
 import com.zerotier.sockets.ZeroTierOutputStream;
 import com.zerotier.sockets.ZeroTierSocket;
@@ -28,9 +28,6 @@ public class ProxyService {
      */
     public void pierce(String ip, int port, HttpServletRequest request, HttpServletResponse response) {
         ZeroTierSocket socket = null;
-        ZeroTierInputStream proxyInput = null;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        List<ByteArrayOutputStream> outList = new ArrayList<>();
         try {
             // 创建连接
             socket = new ZeroTierSocket(2, ZeroTierNative.ZTS_SOCK_STREAM, 0);
@@ -40,52 +37,20 @@ public class ProxyService {
             ZeroTierOutputStream proxyOutput = socket.getOutputStream();
             // 发送请求
             send(ip, port, request, new DataOutputStream(proxyOutput));
+            // 关闭输入流
             proxyOutput.close();
-
+            // 关闭输出
             socket.shutdownOutput();
-            proxyInput = socket.getInputStream();
-//            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-//            proxyInput.transferTo(bao);
-//            System.out.println(bao.toString(StandardCharsets.UTF_8));
-            boolean end = false;
-            boolean next = false;
-            while (true) {
-                int num = proxyInput.read();
-                if (!end && num == 13) next = true;
-                else if (!end && next && num == 10) {
-                    if (out.size() > 1) {
-                        outList.add(out);
-                        out = new ByteArrayOutputStream();
-                    } else end = true;
-                    next = false;
-                } else if (num >= 0) {
-                    out.write(num);
-                    next = false;
-                }
-            }
-        } catch (IOException e) {
-            try {
-                OutputStream clientOutput = response.getOutputStream();
-                response.reset();
-                buildHeader(response, outList, out.size());
-                if (out.size() > 1) clientOutput.write(out.toByteArray());
-                clientOutput.flush();
-            } catch (IOException ex) {
-//                ex.printStackTrace();
-            }
+            // 处理Http响应
+            handleHttp(response, socket.getInputStream());
+        } catch (Exception e) {
+            LogUtil.warn("Zerotier Socket 连接异常");
         } finally {
-            if (proxyInput != null) {
-                try {
-                    proxyInput.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
             if (socket != null) {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    // 连接异常
                 }
             }
         }
@@ -100,34 +65,41 @@ public class ProxyService {
      * @param response 响应
      */
     public void direct(String ip, int port, HttpServletRequest request, HttpServletResponse response) {
-        Socket socket = null;
-        InputStream proxyInput = null;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        List<ByteArrayOutputStream> outList = new ArrayList<>();
-        try {
+        try (Socket socket = new Socket(ip, port)) {
             // 创建连接
-            socket = new Socket(ip, port);
             socket.setSoTimeout(10000);
             // 创建输入流
             OutputStream proxyOutput = socket.getOutputStream();
             // 发送请求
             send(ip, port, request, new DataOutputStream(proxyOutput));
-//            proxyOutput.close();
-
+            // 关闭输入流
+            proxyOutput.close();
+            // 关闭输出
             socket.shutdownOutput();
-            proxyInput = socket.getInputStream();
-//            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-//            proxyInput.transferTo(bao);
-//            System.out.println(bao.toString(StandardCharsets.UTF_8));
+            // 处理Http响应
+            handleHttp(response, socket.getInputStream());
+        } catch (Exception e) {
+            LogUtil.warn("Socket 连接异常");
+        }
+    }
+
+    /**
+     * 处理http响应
+     * @param response 响应
+     * @param in 输入流
+     */
+    private void handleHttp(HttpServletResponse response, InputStream in) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        List<ByteArrayOutputStream> header = new ArrayList<>();
+        try {
             boolean end = false;
             boolean next = false;
-            proxyInput = socket.getInputStream();
             while (true) {
-                int num = proxyInput.read();
+                int num = in.read();
                 if (!end && num == 13) next = true;
                 else if (!end && next && num == 10) {
                     if (out.size() > 1) {
-                        outList.add(out);
+                        header.add(out);
                         out = new ByteArrayOutputStream();
                     } else end = true;
                     next = false;
@@ -137,29 +109,12 @@ public class ProxyService {
                 }
             }
         } catch (IOException e) {
-            try {
-                OutputStream clientOutput = response.getOutputStream();
-                response.reset();
-                buildHeader(response, outList, out.size());
-                if (out.size() > 1) clientOutput.write(out.toByteArray());
-                clientOutput.flush();
-            } catch (IOException ex) {
-//                ex.printStackTrace();
-            }
+            receive(response, header, out);
         } finally {
-            if (proxyInput != null) {
-                try {
-                    proxyInput.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                if (in != null) in.close();
+            } catch (Exception ignored) {
+                // 流异常
             }
         }
     }
@@ -183,8 +138,24 @@ public class ProxyService {
         }
     }
 
-    private void receive(){
-
+    /**
+     * 接收响应
+     *
+     * @param response 响应
+     * @param header   响应头
+     * @param out      响应体
+     */
+    private void receive(HttpServletResponse response, List<ByteArrayOutputStream> header, ByteArrayOutputStream out) {
+        try (out) {
+            OutputStream clientOutput = response.getOutputStream();
+            response.reset();
+            buildHeader(response, header, out.size());
+            if (out.size() > 1) clientOutput.write(out.toByteArray());
+            else out.close();
+            clientOutput.flush();
+        } catch (IOException ex) {
+            LogUtil.warn("连接断开");
+        }
     }
 
     /**
