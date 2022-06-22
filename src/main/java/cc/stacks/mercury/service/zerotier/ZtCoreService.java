@@ -14,7 +14,7 @@ import java.math.BigInteger;
 public class ZtCoreService {
 
     private static ZeroTierNode node;
-    public static String ipv4;
+    private static String ipv4;
 
     /**
      * 初始化

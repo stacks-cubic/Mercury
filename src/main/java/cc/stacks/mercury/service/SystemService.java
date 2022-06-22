@@ -53,7 +53,7 @@ public class SystemService {
             data.put("adminName", adminName);
             data.put("adminNickname", adminNickname);
             data.put("adminPassword", adminPassword);
-            data.put("addTime", ""+System.currentTimeMillis());
+            data.put("addTime", "" + System.currentTimeMillis());
 
             if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword, data);
             if (transit.isState()) transit = writerConfigFile(path, config);
@@ -90,15 +90,17 @@ public class SystemService {
     private Transit<Object> writerConfigFile(String path, String config) throws IOException {
         FileWriter writer = null;
         try {
+            boolean state;
             File file = new File(path + "/application.yaml");
             LogUtil.info("Create config: " + file.getPath());
             if (!file.exists()) {
                 File parentFile = file.getParentFile();
-                if (parentFile.exists()) file.createNewFile();
+                if (parentFile.exists()) state = file.createNewFile();
                 else {
-                    parentFile.mkdirs();
-                    file.createNewFile();
+                    state = parentFile.mkdirs();
+                    if (state) state = file.createNewFile();
                 }
+                if (!state) return Transit.failure();
             }
             writer = new FileWriter(file, false);
             writer.write(config);
@@ -136,6 +138,9 @@ public class SystemService {
                 return Transit.success();
             }
             return Transit.failure(10005);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return Transit.failure(10003, e.getMessage());
         } catch (Exception e) {
             return Transit.failure(10003, e.getMessage());
         }
@@ -151,35 +156,46 @@ public class SystemService {
      */
     private Transit<Object> initData(String url, Connection conn, Map<String, String> data) {
         try {
-            StringBuilder sqlBuilder = new StringBuilder();
-            Statement statement = conn.createStatement();
             LogUtil.info("Create initial data...");
             InputStream input = null;
             if (url.contains("mysql")) input = mysqlSQL.getInputStream();
             else if (url.contains("sqlite")) input = sqliteSQL.getInputStream();
             if (input == null) return Transit.failure(10007, "Database not supported");
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input))) {
-                String temp;
-                while ((temp = bufferedReader.readLine()) != null) {
-                    if (!temp.startsWith("--")) sqlBuilder.append(temp);
-                    if (temp.endsWith(";")) {
-                        String sql = sqlBuilder.toString();
-                        for (Map.Entry<String, String> item : data.entrySet()) {
-                            sql = sql.replace("${" + item.getKey() + "}", "'" + item.getValue() + "'");
-                        }
-                        statement.execute(sql);
-                        sqlBuilder = new StringBuilder();
-                    }
-                }
-                LogUtil.info("Create initial data complete");
-                return Transit.success();
-            } catch (Exception ex) {
-                LogUtil.error(10006, "Create initial data fail: " + ex.getMessage());
-                return Transit.failure(10006, ex.getMessage());
-            }
+            return executeSQL(conn,data,input);
         } catch (Exception e) {
             LogUtil.error(10005, "Create initial data fail: " + e.getMessage());
             return Transit.failure(10005, e.getMessage());
+        }
+    }
+
+    /**
+     * 执行语句
+     * @param conn 数据库连接
+     * @param data 安装数据
+     * @param input 语句输入
+     * @return 执行响应
+     */
+    private Transit<Object> executeSQL(Connection conn, Map<String, String> data,InputStream input){
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input))) {
+            String temp;
+            Statement statement = conn.createStatement();
+            StringBuilder sqlBuilder = new StringBuilder();
+            while ((temp = bufferedReader.readLine()) != null) {
+                if (!temp.startsWith("--")) sqlBuilder.append(temp);
+                if (temp.endsWith(";")) {
+                    String sql = sqlBuilder.toString();
+                    for (Map.Entry<String, String> item : data.entrySet()) {
+                        sql = sql.replace("${" + item.getKey() + "}", "'" + item.getValue() + "'");
+                    }
+                    statement.execute(sql);
+                    sqlBuilder = new StringBuilder();
+                }
+            }
+            LogUtil.info("Create initial data complete");
+            return Transit.success();
+        } catch (Exception ex) {
+            LogUtil.error(10006, "Create initial data fail: " + ex.getMessage());
+            return Transit.failure(10006, ex.getMessage());
         }
     }
 

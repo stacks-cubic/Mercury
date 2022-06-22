@@ -31,10 +31,10 @@ public class LogUtil {
     }
 
     public static void unexpected(int code, String action, Exception err) {
-        out("error","["+code+"]"+ getContent(action,err));
+        out("error", "[" + code + "]" + getContent(action, err));
     }
 
-    public static String getContent(String action, Exception err){
+    public static String getContent(String action, Exception err) {
         StringBuilder builder = new StringBuilder();
         builder.append(action).append(": ").append(err.getMessage());
         StackTraceElement[] stackTrace = err.getStackTrace();
@@ -47,9 +47,9 @@ public class LogUtil {
         StackTraceElement[] stackTrace = new Exception().getStackTrace();
         Logger logger = LoggerFactory.getLogger(stackTrace[3].getClassName());
         switch (type) {
-            case "info" -> logger.info(message);
             case "warn" -> logger.warn(message);
             case "error" -> logger.error(message);
+            case "info", default -> logger.info(message);
         }
     }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 public class SystemController {
 
     @Value("${mercury.init}")
-    private Boolean initState;
+    private boolean initState;
     @Value("${mercury.name}")
     private String sysName;
     @Value("${mercury.version}")
