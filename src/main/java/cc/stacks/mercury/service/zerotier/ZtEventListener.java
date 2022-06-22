@@ -22,8 +22,6 @@ public class ZtEventListener implements ZeroTierEventListener {
             ZtCoreService.stopNode();
         }
         else return;
-        // 输出其他代码
-        // else tips +=" code is "+code;
         LogUtil.info(tips);
     }
 

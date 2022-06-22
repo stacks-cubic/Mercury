@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class NetworkController {
 
     @Value("${mercury.init}")
-    private Boolean initState;
+    private boolean initState;
     private final ZtCoreService ztCoreService;
 
     public NetworkController(ZtCoreService ztCoreService) {
@@ -35,14 +35,6 @@ public class NetworkController {
     public Transit<Object> stopZt() {
         if (!initState) return Transit.failure(10001);
         return Transit.auto(ZtCoreService.stopNode());
-    }
-
-    // 获取网络状态
-    @ResponseBody
-    @GetMapping(value = "/zt/state")
-    public Transit<Object> getState() {
-        if (!initState) return Transit.failure(10001);
-        return Transit.success(ZtCoreService.ipv4);
     }
 
 }

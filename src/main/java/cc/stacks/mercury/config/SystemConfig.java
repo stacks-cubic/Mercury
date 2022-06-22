@@ -21,7 +21,7 @@ public class SystemConfig implements ServletContextAware {
     @Value("${server.port}")
     private int port;
     @Value("${mercury.init}")
-    private Boolean initState;
+    private boolean initState;
     private final ConfigData configData;
     private static Map<String, String> configMap;
 

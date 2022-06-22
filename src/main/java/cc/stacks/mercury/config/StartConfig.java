@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class StartConfig implements CommandLineRunner {
 
     @Value("${mercury.init}")
-    private Boolean initState;
+    private boolean initState;
 
     private final ZtCoreService ztCoreService;
 
@@ -18,7 +18,7 @@ public class StartConfig implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (initState) ztCoreService.init();
     }
 
