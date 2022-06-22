@@ -2,7 +2,7 @@
   <div>
     <div class="blur" :class="{show:blur}"></div>
     <div class="background" :style="{backgroundImage: 'url(\''+bg+'\')'}"></div>
-    <div class="container">
+    <div class="container no-select">
       <div class="pa-10 header float-right">
         <div class="flex align-center">
           <a-button type="text" class="mr-10" :class="{active:blur}" shape="circle" @click="switchBlur">

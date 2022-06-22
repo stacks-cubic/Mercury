@@ -2,7 +2,7 @@
   <div>
     <div class="blur" :class="{show:blur}"></div>
     <div class="background" :style="{backgroundImage: 'url(\''+bg+'\')'}"></div>
-    <div class="container">
+    <div class="container no-select">
       <div class="pa-10 header flex align-center justify-between full-width">
         <a-button type="text" class="flex align-center px-10" @click="switchInside">
           <global-outlined style="font-size: 18px" v-if="inside"/>
