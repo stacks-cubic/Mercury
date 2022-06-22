@@ -49,7 +49,7 @@ public class SystemController {
     public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
         if (initState) return Transit.failure(10002);
         if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
-        if (dbUrl.startsWith("jdbc:")) return Transit.failure(10009,"Invalid database url format");
+        if (!dbUrl.startsWith("jdbc:")) return Transit.failure(10009,"Invalid database url format");
         if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database driver cannot be empty");
         if (TextUtil.isNull(title)) return Transit.failure(10009,"Title cannot be empty");
         if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
@@ -62,6 +62,7 @@ public class SystemController {
     public Transit<Object> testDatabase(String dbUrl,String dbUser,String dbPassword) {
         if (initState) return Transit.failure(10002);
         if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
+        if (!dbUrl.startsWith("jdbc:")) return Transit.failure(10009,"Invalid database url format");
         if (TextUtil.isNull(dbUser)) return Transit.failure(10009,"Database username cannot be empty");
         if (TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
         return systemService.testDatabase(dbUrl, dbUser, dbPassword);

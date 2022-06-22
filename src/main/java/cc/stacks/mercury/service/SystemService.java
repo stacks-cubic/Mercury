@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.URI;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,13 +38,14 @@ public class SystemService {
      */
     public Transit<Object> completeInit(String dbUrl, String dbDriver, String dbUser, String dbPassword, String adminName, String adminNickname, String adminPassword, String title) {
         try {
+            URI uri = new URI(dbUrl);
             String path = new ApplicationHome().getDir().getPath();
             File file = new File(path);
             Transit<Object> transit = Transit.auto(file.exists());
             if (!transit.isState()) transit = Transit.auto(file.mkdirs());
 
             String config = "server:\n  port: 20200\n  compression:\n    enabled: true\n    mime-types: text/plain,application/json,text/css,application/javascript,text/javascript,image/png,image/jpeg\n    min-response-size: 1KB\n  undertow:\n    threads:\n      io: 4\n      worker: 32\nspring:\n  jackson:\n    default-property-inclusion: non_null\n  servlet:\n    multipart:\n      max-request-size: 1024MB\n      max-file-size: 1024MB\n  datasource:\n    url: ${dbUrl}\n    driver-class-name: ${dbDriver}\n    username: ${dbUser}\n    password: ${dbPassword}\nmercury:\n  init: true\n  name: ${title}\n  version: 1.0.0";
-            config = config.replace("${dbUrl}", dbUrl)
+            config = config.replace("${dbUrl}", uri.toString())
                     .replace("${dbDriver}", dbDriver)
                     .replace("${dbUser}", TextUtil.isNull(dbUser) ? "" : dbUser)
                     .replace("${dbPassword}", TextUtil.isNull(dbPassword) ? "" : dbPassword)
