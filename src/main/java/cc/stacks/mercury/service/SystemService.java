@@ -53,7 +53,7 @@ public class SystemService {
             data.put("adminName", adminName);
             data.put("adminNickname", adminNickname);
             data.put("adminPassword", adminPassword);
-            data.put("addTime", ""+System.currentTimeMillis());
+            data.put("addTime", "" + System.currentTimeMillis());
 
             if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword, data);
             if (transit.isState()) transit = writerConfigFile(path, config);
@@ -90,15 +90,17 @@ public class SystemService {
     private Transit<Object> writerConfigFile(String path, String config) throws IOException {
         FileWriter writer = null;
         try {
+            boolean state;
             File file = new File(path + "/application.yaml");
             LogUtil.info("Create config: " + file.getPath());
             if (!file.exists()) {
                 File parentFile = file.getParentFile();
-                if (parentFile.exists()) file.createNewFile();
+                if (parentFile.exists()) state = file.createNewFile();
                 else {
-                    parentFile.mkdirs();
-                    file.createNewFile();
+                    state = parentFile.mkdirs();
+                    if (state) state = file.createNewFile();
                 }
+                if (!state) return Transit.failure();
             }
             writer = new FileWriter(file, false);
             writer.write(config);
@@ -136,6 +138,9 @@ public class SystemService {
                 return Transit.success();
             }
             return Transit.failure(10005);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return Transit.failure(10003, e.getMessage());
         } catch (Exception e) {
             return Transit.failure(10003, e.getMessage());
         }

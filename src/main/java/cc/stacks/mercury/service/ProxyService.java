@@ -73,7 +73,6 @@ public class ProxyService {
             // 处理Http响应
             handleHttp(response, socket.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
             LogUtil.warn("Socket 连接异常");
         }
     }
@@ -132,7 +131,7 @@ public class ProxyService {
                 data.flush();
             } else data.write(buildRequest(ip, port, request).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            e.printStackTrace();
+            // 数据流异常
         }
     }
 
@@ -239,7 +238,7 @@ public class ProxyService {
                     msg.append(str);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                // 读取器异常
             }
         }
         return msg.toString();
