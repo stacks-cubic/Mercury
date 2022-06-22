@@ -2,7 +2,6 @@ package cc.stacks.mercury.config;
 
 import cc.stacks.mercury.service.ProxyService;
 import cc.stacks.mercury.util.TextUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;

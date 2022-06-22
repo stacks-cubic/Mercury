@@ -88,6 +88,7 @@ public class ProxyService {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         List<ByteArrayOutputStream> header = new ArrayList<>();
         try {
+            long run = 0;
             boolean end = false;
             boolean next = false;
             while (true) {
@@ -102,7 +103,8 @@ public class ProxyService {
                 } else if (num != -1) {
                     out.write(num);
                     next = false;
-                }
+                }else if(run == 0) break;
+                run++;
             }
         } catch (IOException e) {
             receive(response, header, out);
@@ -267,6 +269,7 @@ public class ProxyService {
                     String text = value.substring(value.indexOf("=") + 1, value.indexOf(";")).trim();
                     Cookie cookie = new Cookie(name, text);
                     cookie.setHttpOnly(value.contains("HttpOnly"));
+                    cookie.setSecure(value.contains("Secure"));
 
                     if (value.contains("Path=")) {
                         String path = value.substring(value.indexOf("Path=") + 5);
@@ -277,6 +280,7 @@ public class ProxyService {
                         String age = value.substring(value.indexOf("Max-Age=") + 8);
                         cookie.setMaxAge(Integer.parseInt(age.substring(0, age.indexOf(";"))));
                     }
+
                     response.addCookie(cookie);
                 } else if (!TextUtil.isNull(key) && !TextUtil.isNull(value)) response.setHeader(key, value);
             }
