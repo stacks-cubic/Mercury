@@ -49,6 +49,7 @@ const system = {
 }
 
 export default {
+    host: process.env.VUE_APP_BASE_URL,
     device,
     system
 }

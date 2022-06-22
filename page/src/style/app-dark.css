@@ -1,0 +1,35 @@
+#app .dark,
+.dark .ant-select-arrow{
+  color: #f4f4f4;
+}
+
+.dark .border-top {
+  border-top: 1px solid #222 !important;
+}
+
+.dark .border-bottom {
+  border-bottom: 1px solid #222 !important;
+}
+
+.dark .border-right {
+  border-right: 1px solid #222 !important;
+}
+
+#app .dark,
+.loading.dark,
+.dark .ant-input,
+.dark .ant-select,
+.dark .ant-input-group-addon{
+  background-color: #333333;
+  color: #f4f4f4;
+}
+
+.dark .ant-input,
+.dark .ant-select-selector,
+.dark .ant-input-group-addon{
+  border: 1px solid #111 !important;
+}
+
+.dark .ant-input-group > .ant-input:last-child, .ant-input-group-addon:last-child {
+  border-left: none !important;
+}
