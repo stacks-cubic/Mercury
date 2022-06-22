@@ -47,9 +47,16 @@ public class LogUtil {
         StackTraceElement[] stackTrace = new Exception().getStackTrace();
         Logger logger = LoggerFactory.getLogger(stackTrace[3].getClassName());
         switch (type) {
-            case "warn" -> logger.warn(message);
-            case "error" -> logger.error(message);
-            case "info", default -> logger.info(message);
+            case "warn":
+                logger.warn(message);
+                break;
+            case "error":
+                logger.error(message);
+                break;
+            case "info":
+            default:
+                logger.info(message);
+                break;
         }
     }
 
