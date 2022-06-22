@@ -19,7 +19,7 @@
             <setting-outlined style="font-size: 18px"/>
           </template>
         </a-button>
-        <a-button type="text" class="flex align-center px-10">
+        <a-button type="text" class="flex align-center pl-10 pr-10">
           <user-outlined style="font-size: 18px"/>
           <div class="nickname line1 ml-5">Skay Zhang</div>
         </a-button>
@@ -41,8 +41,8 @@
           <a-button type="primary" style="width: 60px">搜索</a-button>
         </a-input-group>
       </div>
-      <div class="mark-box px-10">
-        <a-row :gutter="[10,10]" class="justify-center" v-if="type===1">
+      <div class="mark-box px-10 pb-20">
+        <a-row :gutter="[10,10]" class="justify-center pb-20" v-if="type===1">
           <a-col :xs="12" :md="6" :lg="4">
             <div class="mark-item">
               <img src="../assets/logo.png" class="mark-icon"/>
@@ -283,6 +283,7 @@ export default {
 }
 
 .header .nickname {
+  display: block !important;
   max-width: 60px;
 }
 </style>
