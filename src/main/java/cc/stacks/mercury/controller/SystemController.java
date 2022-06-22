@@ -2,6 +2,7 @@ package cc.stacks.mercury.controller;
 
 import cc.stacks.mercury.MercuryApplication;
 import cc.stacks.mercury.config.Access;
+import cc.stacks.mercury.config.SystemConfig;
 import cc.stacks.mercury.service.SystemService;
 import cc.stacks.mercury.util.TextUtil;
 import cc.stacks.mercury.util.Transit;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,21 +43,34 @@ public class SystemController {
         Map<String, String> data = new HashMap<>();
         data.put("name", sysName);
         data.put("version", sysVersion);
+
         if (!initState) return Transit.failure(10001,data);
+
+        data.put("theme", SystemConfig.getBoolean("page:theme:dark") ? "dark":"light");
+        data.put("color", SystemConfig.get("page:theme:color"));
+
         return Transit.success(data);
     }
 
     // 初始化系统
     @ResponseBody
     @PostMapping(value = "/init")
-    public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
+    public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,Boolean registerState,String title) {
         if (initState) return Transit.failure(10002);
         if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
         if (!dbUrl.startsWith("jdbc:")) return Transit.failure(10009,"Invalid database url format");
         if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database driver cannot be empty");
         if (TextUtil.isNull(title)) return Transit.failure(10009,"Title cannot be empty");
         if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
-        return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword, title);
+        if (TextUtil.isNull(registerState)) registerState = false;
+        return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword,registerState, title);
+    }
+
+    // 初始化系统
+    @ResponseBody
+    @GetMapping(value = "/bg")
+    public void getBg(HttpServletResponse response) {
+        systemService.getBg(response);
     }
 
     // 测试连接数据库

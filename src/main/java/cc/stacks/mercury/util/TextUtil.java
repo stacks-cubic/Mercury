@@ -42,7 +42,7 @@ public class TextUtil {
 
     // 是否全数字
     public static boolean isAllNumber(String txt) {
-        return Pattern.matches("^[0-9]+$", txt);
+        return Pattern.matches("^\\d+$", txt);
     }
 
     // 是否全中文
@@ -63,12 +63,12 @@ public class TextUtil {
 
     // 校验手机号码
     public static boolean checkPhone(String txt) {
-        return Pattern.matches("^1(3[0-9]|4[5,7]|5[0-9]|6[2,5-7]|7[0-9]|8[0-9]|9[1,8-9])\\d{8}$", txt);
+        return Pattern.matches("^1(3\\d|4[5,7]|5\\d|6[2,5-7]|7\\d|8\\d|9[1,8-9])\\d{8}$", txt);
     }
 
     // 校验url
     public static boolean checkUrl(String txt) {
-        return Pattern.matches("^((https|http)?://)[^\\s]+", txt);
+        return Pattern.matches("^((https|http)?://)\\S+", txt);
     }
 
     // 生成随机数

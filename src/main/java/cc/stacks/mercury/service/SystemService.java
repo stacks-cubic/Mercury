@@ -9,6 +9,8 @@ import org.springframework.boot.system.ApplicationHome;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URI;
 import java.sql.*;
@@ -36,7 +38,7 @@ public class SystemService {
      * @param title         系统标题
      * @return 初始化响应
      */
-    public Transit<Object> completeInit(String dbUrl, String dbDriver, String dbUser, String dbPassword, String adminName, String adminNickname, String adminPassword, String title) {
+    public Transit<Object> completeInit(String dbUrl, String dbDriver, String dbUser, String dbPassword, String adminName, String adminNickname, String adminPassword, boolean registerState,String title) {
         try {
             URI uri = new URI(dbUrl);
             String path = new ApplicationHome().getDir().getPath();
@@ -55,6 +57,7 @@ public class SystemService {
             data.put("adminName", adminName);
             data.put("adminNickname", adminNickname);
             data.put("adminPassword", adminPassword);
+            data.put("registerState", String.valueOf(registerState));
             data.put("addTime", "" + System.currentTimeMillis());
 
             if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword, data);
@@ -63,6 +66,30 @@ public class SystemService {
             return transit;
         } catch (Exception e) {
             return Transit.failure();
+        }
+    }
+
+    public void getBg(HttpServletResponse response){
+        FileInputStream input = null;
+        try{
+            String path = new ApplicationHome().getDir().getPath();
+            File file = new File(path+"/bg.jpg");
+            input = new FileInputStream(file);
+
+            response.reset();
+            ServletOutputStream outputStream = response.getOutputStream();
+            byte[] cache = new byte[1024];
+            int nRead;
+            while ((nRead = input.read(cache)) != -1) {
+                outputStream.write(cache, 0, nRead);
+                outputStream.flush();
+            }
+            input.close();
+            outputStream.flush();
+        }catch (Exception e){
+            try {
+                if (input != null) input.close();
+            }catch (Exception ignored){}
         }
     }
 

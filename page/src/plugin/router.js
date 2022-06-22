@@ -18,6 +18,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "base" */ '../views/home')
     },
     {
+        path: '/setting',
+        name: 'Setting',
+        component: () => import(/* webpackChunkName: "base" */ '../views/setting')
+    },
+    {
         path: '/error/:type',
         name: 'Error',
         component: () => import(/* webpackChunkName: "base" */ '../views/error'),

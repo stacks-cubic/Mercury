@@ -79,10 +79,13 @@ CREATE TABLE "group"
 -- 创建系统配置
 insert into config(id, key, value)
 values (1, 'db:version', '1.0.0'),
-       (2, 'user:register:url', '0'),
-       (3, 'user:register:oauth2', '0'),
-       (4, 'network:proxy:mode', '0'),
-       (5, 'network:zt:id', '');
+       (2, 'user:register:open', ${registerState}),
+       (3, 'user:register:url', '0'),
+       (4, 'user:register:oauth2', '0'),
+       (5, 'network:proxy:mode', '0'),
+       (6, 'network:zt:id', ''),
+       (7, 'page:theme:dark', false),
+       (8, 'page:theme:color', '#333333');
 -- 创建初始管理员
 insert into user(id, name, nickname, password, admin, add_time)
 values (61201, ${adminName}, ${adminNickname}, ${adminPassword}, 1, ${addTime});

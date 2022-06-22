@@ -38,6 +38,7 @@ const system = {
         if(form.adminName) data.append('adminName', form.adminName);
         if(form.adminNickname) data.append('adminNickname', form.adminNickname);
         if(form.adminPassword) data.append('adminPassword', md5(form.adminPassword));
+        data.append('registerState', form.registerState);
         if(form.title) data.append('title', form.title);
         return request({
             url: '/sys/init',
@@ -48,6 +49,7 @@ const system = {
 }
 
 export default {
+    host: process.env.VUE_APP_BASE_URL,
     device,
     system
 }
