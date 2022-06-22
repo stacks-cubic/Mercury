@@ -36,7 +36,7 @@ public class SystemService {
      * @param title         系统标题
      * @return 初始化响应
      */
-    public Transit<Object> completeInit(String dbUrl, String dbDriver, String dbUser, String dbPassword, String adminName, String adminNickname, String adminPassword, String title) {
+    public Transit<Object> completeInit(String dbUrl, String dbDriver, String dbUser, String dbPassword, String adminName, String adminNickname, String adminPassword, boolean registerState,String title) {
         try {
             URI uri = new URI(dbUrl);
             String path = new ApplicationHome().getDir().getPath();
@@ -55,6 +55,7 @@ public class SystemService {
             data.put("adminName", adminName);
             data.put("adminNickname", adminNickname);
             data.put("adminPassword", adminPassword);
+            data.put("registerState", String.valueOf(registerState));
             data.put("addTime", "" + System.currentTimeMillis());
 
             if (transit.isState()) transit = initDatabase(dbUrl, dbUser, dbPassword, data);

@@ -46,14 +46,15 @@ public class SystemController {
     // 初始化系统
     @ResponseBody
     @PostMapping(value = "/init")
-    public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,String title) {
+    public Transit<Object> completeInit(String dbUrl,String dbDriver,String dbUser,String dbPassword,String adminName,String adminNickname,String adminPassword,Boolean registerState,String title) {
         if (initState) return Transit.failure(10002);
         if (TextUtil.isNull(dbUrl)) return Transit.failure(10009,"Database url cannot be empty");
         if (!dbUrl.startsWith("jdbc:")) return Transit.failure(10009,"Invalid database url format");
         if (TextUtil.isNull(dbDriver)) return Transit.failure(10009,"Database driver cannot be empty");
         if (TextUtil.isNull(title)) return Transit.failure(10009,"Title cannot be empty");
         if (!TextUtil.isNull(dbUser) && TextUtil.isNull(dbPassword)) return Transit.failure(10009,"Database password cannot be empty");
-        return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword, title);
+        if (TextUtil.isNull(registerState)) registerState = false;
+        return systemService.completeInit(dbUrl, dbDriver, dbUser, dbPassword, adminName, adminNickname, adminPassword,registerState, title);
     }
 
     // 测试连接数据库

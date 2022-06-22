@@ -61,6 +61,9 @@
           <a-form-item label="网站标题">
             <a-input v-model:value="form.title" allowClear :disabled="loading" placeholder="2~12位英文或1~6位中文字符"/>
           </a-form-item>
+          <a-form-item label="允许注册">
+            <a-switch v-model:checked="form.registerState" />
+          </a-form-item>
         </a-form>
         <a-form :label-col="label" v-show="current === 2">
           <a-result status="success" title="安装完成">
@@ -114,6 +117,7 @@ export default {
       adminName: '',
       adminNickname: '',
       adminPassword: '',
+      registerState: false,
       title: ''
     }
   }),
