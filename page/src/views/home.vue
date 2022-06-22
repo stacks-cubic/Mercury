@@ -159,12 +159,13 @@ export default {
       this.bg = this.$api.host + this.bg;
       let info = localStorage.getItem('app:info');
       if(info) this.info = JSON.parse(info);
-      let blur = localStorage.getItem('blur');
+      let blur = localStorage.getItem('app:blur');
       if(blur) this.blur = blur;
     },
     switchBlur() {
       this.blur = !this.blur;
-      localStorage.setItem('blur',this.blur);
+      if(this.blur) localStorage.setItem('app:blur','true');
+      else localStorage.removeItem('app:blur')
     },
     switchInside() {
       this.inside = !this.inside;
@@ -191,7 +192,7 @@ export default {
 
 .blur {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   transition: all ease-in 0.3s;
   opacity: 0;
   z-index: 2;
@@ -276,7 +277,7 @@ export default {
 
 .mark-item-small .mark-icon {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   transition: all ease-in 0.3s;
 }
 
@@ -295,7 +296,7 @@ export default {
 }
 
 .mark-item-small:hover {
-  background: #fff;
+  background-color: #fff;
   color: #333;
 }
 
@@ -307,7 +308,7 @@ export default {
 .mark-group,
 .tool-group {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.5);
   transition: all ease-in 0.3s;
   border-radius: 8px;
   margin-top: 10px;
@@ -320,7 +321,7 @@ export default {
 
 .mark-group:hover,
 .tool-group:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .dark .mark-group:hover,
@@ -337,11 +338,11 @@ export default {
 }
 
 .active {
-  background: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .dark .active {
-  background: rgba(80, 80, 80, 0.8) !important;
+  background-color: rgba(80, 80, 80, 0.8) !important;
 }
 
 .header .nickname {
@@ -356,7 +357,7 @@ export default {
 
 .container > .header .ant-btn-text {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   color: #5b5b5b;
 }
 
@@ -367,7 +368,7 @@ export default {
 }
 
 .container > .header .ant-btn-text:hover, .ant-btn-text:focus {
-  background: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   color: #333;
 }
 

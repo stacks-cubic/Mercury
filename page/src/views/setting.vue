@@ -21,6 +21,40 @@
           </a-button>
         </div>
       </div>
+      <div class="box px-10">
+        <div class="title" :style="{color: info.color}">系统设置</div>
+        <div class="card pa-10">
+          系统信息。。
+        </div>
+        <div class="card">
+          <div class="card-header border-bottom pa-10">基础设置</div>
+          <div class="pa-10">
+            <div>搜索引擎</div>
+            <div>背景图片</div>
+            <div>文字颜色</div>
+            <div>黑暗模式</div>
+            <div>代理设置</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header border-bottom pa-10">用户管理</div>
+          <div class="pa-10">
+            内容
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header border-bottom pa-10">内网服务</div>
+          <div class="pa-10">
+            内容
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header border-bottom pa-10">书签管理</div>
+          <div class="pa-10">
+            内容
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,13 +82,14 @@ export default {
     init() {
       this.bg = this.$api.host + this.bg;
       let info = localStorage.getItem('app:info');
-      if(info) this.info = JSON.parse(info);
-      let blur = localStorage.getItem('blur');
-      if(blur) this.blur = blur;
+      if (info) this.info = JSON.parse(info);
+      let blur = localStorage.getItem('app:blur');
+      if (blur) this.blur = blur;
     },
     switchBlur() {
       this.blur = !this.blur;
-      localStorage.setItem('blur',this.blur);
+      if (this.blur) localStorage.setItem('app:blur', 'true');
+      else localStorage.removeItem('app:blur')
     },
   },
   mounted() {
@@ -78,7 +113,7 @@ export default {
 
 .blur {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   transition: all ease-in 0.3s;
   opacity: 0;
   z-index: 2;
@@ -95,6 +130,7 @@ export default {
 }
 
 .box {
+  padding-top: 60px;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -102,148 +138,41 @@ export default {
 .title {
   padding: 40px 0 20px 0;
   text-align: center;
-  font-size: 56px;
+  font-size: 52px;
   color: #333;
-}
-
-.dark .title {
-  color: #fff;
-}
-
-.search {
-  padding: 0 10px 30px 10px;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.mark-item {
-  backdrop-filter: saturate(100%) blur(5px);
-  background-color: rgba(255, 255, 255, 0.7);
-  transition: all ease-in 0.3s;
-  align-items: center;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-}
-
-.dark .mark-item {
-  background-color: rgba(60, 60, 60, 0.6);
-}
-
-.mark-item:hover {
-  background-color: rgba(255, 255, 255, 1);
-}
-
-.dark .mark-item:hover {
-  background-color: rgba(80, 80, 80, 0.8);
-}
-
-.mark-icon {
-  border-radius: 8px;
-  padding: 5px;
-  height: 50px;
-  width: 50px;
-}
-
-.mark-info {
-  padding: 5px;
-}
-
-.mark-item-small {
-  transition: all ease-in 0.3s;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 12px;
-  color: #f4f4f4;
-}
-
-.dark .mark-item-small {
-  color: #f4f4f4;
-}
-
-.mark-item-small .mark-icon {
-  backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.7);
-  transition: all ease-in 0.3s;
-}
-
-.dark .mark-item-small .mark-icon {
-  background-color: rgba(60, 60, 60, 0.6);
-}
-
-.dark .mark-item-small:hover .mark-icon {
-  background-color: rgba(80, 80, 80, 0.8);
-}
-
-.mark-item-small .mark-info {
-  padding: 2px 1px;
-  max-width: 90px;
-  margin: 0 auto;
-}
-
-.mark-item-small:hover {
-  background: #fff;
-  color: #333;
-}
-
-.dark .mark-item-small:hover {
-  background-color: rgba(80, 80, 80, 0.8);
-  color: #f4f4f4;
-}
-
-.mark-group,
-.tool-group {
-  backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.3);
-  transition: all ease-in 0.3s;
-  border-radius: 8px;
-  margin-top: 10px;
-}
-
-.dark .mark-group,
-.dark .tool-group {
-  background-color: rgba(60, 60, 60, 0.6);
-}
-
-.mark-group:hover,
-.tool-group:hover {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.dark .mark-group:hover,
-.dark .tool-group:hover {
-  background-color: rgba(80, 80, 80, 0.8);
-}
-
-.tool-group .border-right {
-  border-right: 1px solid #bdbdbd;
-}
-
-.dark .tool-group .border-right {
-  border-right: 1px solid #f4f4f4;
 }
 
 .active {
-  background: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .dark .active {
-  background: rgba(80, 80, 80, 0.8) !important;
+  background-color: rgba(80, 80, 80, 0.8) !important;
 }
 
 .header .nickname {
   display: block !important;
   max-width: 60px;
 }
-</style>
-<style>
-.mark-group .ant-collapse-header {
-  padding: 10px 40px 10px 10px !important;
+
+.card {
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .1);
+  transition: all ease-in 0.3s;
+  background-color: #fff;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  opacity: .8;
 }
 
+.card:hover {
+  box-shadow: none;
+  opacity: 1;
+}
+</style>
+<style>
 .container > .header .ant-btn-text {
   backdrop-filter: saturate(100%) blur(5px);
-  background: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   color: #5b5b5b;
 }
 
@@ -254,7 +183,7 @@ export default {
 }
 
 .container > .header .ant-btn-text:hover, .ant-btn-text:focus {
-  background: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   color: #333;
 }
 
