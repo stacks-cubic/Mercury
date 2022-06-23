@@ -1,0 +1,18 @@
+* 入门
+  * [快速开始](quickstart)
+  * [安装部署](install)
+  * [个性化](diy)
+* 进阶
+  * [配置项](config)
+  * [代理](proxy)
+  * [自动发现](auto-discovery)
+  * [服务型书签](server)
+  * [导入书签](mark-import)
+  * [导出书签](mark-export)
+* 指南
+  * [迁移](transfer)
+  * [升级](upgrade)
+  * [覆盖默认页面](diy-page)
+  * [离线模式(PWA)](pwa)
+* [常见问题](faq)
+* [变更记录](/changelog)

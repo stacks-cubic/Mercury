@@ -10,4 +10,4 @@
 - 内网穿透 & 访问代理、服务自动发现、网页书签、多用户
 
 [GitHub](https://github.com/stacks-cubic/Mercury)
-[Get Started](#Mercury)
+[开始使用](#Mercury)
