@@ -5,6 +5,7 @@ on:
       - master
     paths-ignore:
       - '**.md'
+      - 'docs/**'
 jobs:
   build:
     name: Build
