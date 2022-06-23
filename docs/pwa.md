@@ -1,0 +1,3 @@
+# Offline Mode (PWA)
+
+Coming soon...

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cc.stacks</groupId>
     <artifactId>mercury</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <name>Mercury</name>
     <description>An intranet portal with integrated intranet and outtranet dynamic bookmarking, general static bookmarking, network monitoring and zerotier, and multi-user support</description>
 
@@ -104,6 +104,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <includeSystemScope>true</includeSystemScope>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
