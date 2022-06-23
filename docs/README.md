@@ -41,3 +41,5 @@
 
 ## Screenshot
 ![](./_media/demo1.jpeg)
+
+Last Update: {docsify-updated}
