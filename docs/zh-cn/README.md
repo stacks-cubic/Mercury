@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://stacks-cubic.github.io/Mercury/">
-    <img alt="docsify" src="./docs/_media/logo.png">
+    <img alt="docsify" src="../_media/logo.png">
   </a>
 </p>
 
 <p align="center">
-  An easy-to-use and private intranet portal
+  一个简单易用且私有化的内网门户
 </p>
 
 <p align="center">
@@ -23,19 +23,19 @@
     <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Security Rating" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=security_rating"></a>
 </p>
 
-## Progress
+## 进度
 
-- [X] Structure Design
-- [X] Interface Design
-- [X] Database Design
-- [ ] Front-end Development
-- [ ] Back-end Development
+- [X] 结构设计
+- [X] 界面设计
+- [X] 数据库设计
+- [ ] 前端开发
+- [ ] 后端开发
 
-## Structure
-![](docs/_media/structure.png)
+## 项目结构
+![](../_media/structure.png)
 
-## Interface design
-![](docs/_media/ui.png)
+## 界面设计
+![](../_media/ui.png)
 
-## Screenshot
-![](docs/_media/demo1.jpeg)
+## 预览截图
+![](../_media/demo1.jpeg)

@@ -1,22 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Document</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Description">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+    <meta charset="UTF-8">
+    <title>Mercury Document</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="description" content="Description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+    <style>
+      #loading {
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        left: 0;
+        top: 0;
+      }
+    </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script>
+<div id="app">
+    <div id="loading">Loading...</div>
+</div>
+<script>
     window.$docsify = {
-      name: '',
-      repo: ''
+        name: 'Mercury',
+        repo: 'stacks-cubic/Mercury',
+        maxLevel: 3,
+        auto2top: true,
+        loadNavbar: true,
+        coverpage: ['/', '/zh-cn/'],
+        fallbackLanguages: ['zh-cn'],
+        formatUpdated: '{YYYY}-{MM}-{DD} {HH}:{mm}',
     }
-  </script>
-  <!-- Docsify v4 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('sw.js')
+    }
+</script>
+<!-- Docsify v4 -->
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 </body>
 </html>

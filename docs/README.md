@@ -1,13 +1,29 @@
-# Mercury
+<p align="center">
+  <a href="https://stacks-cubic.github.io/Mercury/">
+    <img alt="docsify" src="./_media/logo.png">
+  </a>
+</p>
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Java](https://img.shields.io/badge/Java-17%20or%20later-%23FF7800?logo=java)](https://github.com/stacks-cubic/Mercury#how-to-build)
-[![CodeQL](https://github.com/stacks-cubic/Mercury/workflows/CodeQL/badge.svg)](https://github.com/stacks-cubic/Mercury/security/code-scanning) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=bugs)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury)
+<p align="center">
+  An easy-to-use and private intranet portal
+</p>
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury)
+<p align="center">
+    <a href="https://github.com/stacks-cubic/Mercury/blob/master/LICENSE"><img alt="Liceense" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+    <a href="javascript:;"><img alt="Java Version" src="https://img.shields.io/badge/Java-17%20or%20later-%23FF7800?logo=java"></a>
+    <a href="https://github.com/stacks-cubic/Mercury/security/code-scanning"><img alt="CodeQL" src="https://github.com/stacks-cubic/Mercury/workflows/CodeQL/badge.svg"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=alert_status"></a>
+</p>
 
-An intranet portal with integrated intranet and outtranet dynamic bookmarking, general static bookmarking, network monitoring and zerotier, and multi-user support
+<p align="center">
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Bugs" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=bugs"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Vulnerabilities" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=vulnerabilities"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Maintainability Rating" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=sqale_rating"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Reliability Rating" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=reliability_rating"></a>
+    <a href="https://sonarcloud.io/summary/new_code?id=stacks-cubic_Mercury"><img alt="Security Rating" src="https://sonarcloud.io/api/project_badges/measure?project=stacks-cubic_Mercury&metric=security_rating"></a>
+</p>
 
-## Progress 
+## Progress
 
 - [X] Structure Design
 - [X] Interface Design
@@ -16,10 +32,10 @@ An intranet portal with integrated intranet and outtranet dynamic bookmarking, g
 - [ ] Back-end Development
 
 ## Structure
-![](doc/structure.png)
+![](./_media/structure.png)
 
 ## Interface design
-![](doc/ui.png)
+![](./_media/ui.png)
 
 ## Screenshot
-![](doc/demo1.jpeg)
+![](./_media/demo1.jpeg)
