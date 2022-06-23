@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://stacks-cubic.github.io/Mercury/">
-    <img alt="docsify" src="../_media/logo.png">
+    <img alt="docsify" src="./_media/logo.png">
   </a>
 </p>
 
