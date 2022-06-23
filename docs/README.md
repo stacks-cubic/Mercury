@@ -7,7 +7,7 @@
 
 An intranet portal with integrated intranet and outtranet dynamic bookmarking, general static bookmarking, network monitoring and zerotier, and multi-user support
 
-## Progress
+## Progress 
 
 - [X] Structure Design
 - [X] Interface Design
@@ -16,10 +16,10 @@ An intranet portal with integrated intranet and outtranet dynamic bookmarking, g
 - [ ] Back-end Development
 
 ## Structure
-![](docs/res/structure.png)
+![](doc/structure.png)
 
 ## Interface design
-![](docs/res/ui.png)
+![](doc/ui.png)
 
 ## Screenshot
-![](docs/res/demo1.jpeg)
+![](doc/demo1.jpeg)
