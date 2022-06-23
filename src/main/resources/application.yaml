@@ -20,8 +20,12 @@ spring:
     driver-class-name: org.h2.Driver
     username: SA
     password:
-
+  web:
+    resources:
+      static-locations:
+        - file:./page
+        - classpath:/static
 mercury:
   init: false
   name: Mercury
-  version: 1.0.0
+  version: 0.0.1
