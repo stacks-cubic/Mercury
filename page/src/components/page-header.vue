@@ -11,7 +11,7 @@
           <bg-colors-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="mr-10" shape="circle" @click="openDrawer('setting')">
+      <a-button type="text" class="mr-10" shape="circle" @click="openSetting">
         <template #icon>
           <setting-outlined style="font-size: 18px"/>
         </template>
@@ -22,34 +22,6 @@
       </a-button>
     </div>
   </div>
-  <a-drawer class="setting-drawer no-select" v-model:visible="drawer.setting" :width="250" :destroyOnClose="true"
-            :closable="false" title="设置" placement="right">
-    <div class="flex align-center justify-center full-width border-bottom" style="height: 250px">系统信息卡片</div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>个性化</div>
-      <right-outlined/>
-    </div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>搜索引擎</div>
-      <right-outlined/>
-    </div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>服务管理</div>
-      <right-outlined/>
-    </div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>书签管理</div>
-      <right-outlined/>
-    </div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>用户管理</div>
-      <right-outlined/>
-    </div>
-    <div class="setting-item flex align-center justify-between pa-10 border-bottom">
-      <div>高级</div>
-      <right-outlined/>
-    </div>
-  </a-drawer>
   <a-drawer class="user-drawer no-select" v-model:visible="drawer.user" title="登录账户" :width="320" placement="right">
     <p>登录账户</p>
     <p>Some contents...</p>
@@ -59,7 +31,6 @@
 
 <script>
 import {
-  RightOutlined,
   SettingOutlined,
   BgColorsOutlined,
   UserOutlined,
@@ -69,7 +40,7 @@ import {
 
 export default {
   name: "page-header",
-  components: {RightOutlined,SettingOutlined, BgColorsOutlined, UserOutlined, GlobalOutlined, DeploymentUnitOutlined},
+  components: {SettingOutlined, BgColorsOutlined, UserOutlined, GlobalOutlined, DeploymentUnitOutlined},
   props: {
     blur: {
       type: Boolean,
@@ -86,7 +57,7 @@ export default {
       user: false
     }
   }),
-  emits: ["switchBlur", "switchInside"],
+  emits: ["switchBlur", "switchInside", "openSetting"],
   methods: {
     switchBlur() {
       if (this.blur) {
@@ -110,6 +81,9 @@ export default {
     },
     openDrawer(type) {
       this.drawer[type] = true;
+    },
+    openSetting() {
+      this.$emit("openSetting", {});
     }
   }
 }
@@ -128,29 +102,8 @@ export default {
 .dark .header .active {
   background-color: rgba(80, 80, 80, 0.8) !important;
 }
-
-.setting-drawer{
-  transform: translateZ(0);
-}
-
-.setting-item{
-  cursor: pointer;
-}
-
-.setting-item:hover{
-  background-color: #f9f9f9;
-}
-
-.setting-item:active{
-  background-color: #f4f4f4;
-}
 </style>
 <style>
-.setting-drawer .ant-drawer-body {
-  padding: 0;
-}
-
-.setting-drawer .ant-drawer-header,
 .user-drawer .ant-drawer-header{
   padding: 15px;
 }

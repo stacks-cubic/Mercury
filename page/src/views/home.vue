@@ -3,10 +3,11 @@
     <div class="blur" :class="{show:blur}"></div>
     <div class="background" :style="{backgroundImage: 'url(\''+bg+'\')'}"></div>
     <div class="container no-select">
-      <page-header :blur="blur" :inside="inside" @switchBlur="switchBlur" @switchInside="switchInside"/>
+      <page-header :blur="blur" :inside="inside" @switchBlur="switchBlur" @switchInside="switchInside"
+                   @openSetting="openSetting"/>
       <div class="box">
         <div class="title" :style="{color: info.color}">{{ info.name }}</div>
-        <search />
+        <search/>
         <div class="mark-box px-10 pb-20">
           <!-- 标准大小 服务卡片 -->
           <a-row :gutter="[10,10]" class="justify-center pb-20" v-if="type===1">
@@ -24,7 +25,7 @@
               </a-col>
             </template>
           </a-row>
-          <tool-group />
+          <tool-group/>
           <template v-for="(item,i) in mark.group" :key="'mg_'+i">
             <mark-group :group="item"/>
           </template>
@@ -32,6 +33,7 @@
       </div>
       <page-foot :info="info"/>
     </div>
+    <setting-drawer ref="setting"/>
   </div>
 </template>
 
@@ -43,10 +45,12 @@ import PageHeader from "@/components/page-header";
 import PageFoot from "@/components/page-foot";
 import Search from "@/components/search";
 import ToolGroup from "@/components/tool-group";
+import SettingDrawer from "@/components/setting-drawer";
 
 export default {
   name: 'Home',
   components: {
+    SettingDrawer,
     ToolGroup,
     Search,
     PageFoot,
@@ -114,6 +118,9 @@ export default {
     },
     switchInside() {
       this.inside = !this.inside;
+    },
+    openSetting() {
+      this.$refs.setting.open();
     }
   },
   mounted() {
