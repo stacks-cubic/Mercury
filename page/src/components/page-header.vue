@@ -22,7 +22,8 @@
       </a-button>
     </div>
   </div>
-  <a-drawer class="setting-drawer no-select" v-model:visible="drawer.setting" :width="250" :closable="false" title="设置" placement="right">
+  <a-drawer class="setting-drawer no-select" v-model:visible="drawer.setting" :width="250" :destroyOnClose="true"
+            :closable="false" title="设置" placement="right">
     <div class="flex align-center justify-center full-width border-bottom" style="height: 250px">系统信息卡片</div>
     <div class="setting-item flex align-center justify-between pa-10 border-bottom">
       <div>个性化</div>
@@ -126,6 +127,10 @@ export default {
 
 .dark .header .active {
   background-color: rgba(80, 80, 80, 0.8) !important;
+}
+
+.setting-drawer{
+  transform: translateZ(0);
 }
 
 .setting-item{

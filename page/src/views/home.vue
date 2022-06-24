@@ -136,9 +136,10 @@ export default {
 }
 
 .blur {
-  backdrop-filter: saturate(100%) blur(5px);
+  backdrop-filter: saturate(100%) blur(15px);
   background-color: rgba(0, 0, 0, 0.2);
   transition: all ease-in 0.3s;
+  transform: translateZ(0);
   opacity: 0;
   z-index: 2;
 }
@@ -178,12 +179,14 @@ export default {
 .container > .header .ant-btn-text {
   backdrop-filter: saturate(100%) blur(5px);
   background-color: rgba(255, 255, 255, 0.3);
+  transform: translateZ(0);
   color: #5b5b5b;
 }
 
 .dark .container > .header .ant-btn-text {
   backdrop-filter: saturate(100%) blur(5px);
   background-color: rgba(60, 60, 60, 0.6);
+  transform: translateZ(0);
   color: #f4f4f4;
 }
 
