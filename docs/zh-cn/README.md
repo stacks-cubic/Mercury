@@ -41,3 +41,5 @@
 
 ## 预览截图
 ![](../_media/demo1.jpeg)
+
+最后更新: {docsify-updated}

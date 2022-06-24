@@ -128,8 +128,16 @@ body {
   margin-left: 10px;
 }
 
+.mr-5{
+  margin-right: 5px;
+}
+
 .mr-10{
   margin-right: 10px;
+}
+
+.mb-10{
+  margin-bottom: 10px;
 }
 
 .mx-10{
