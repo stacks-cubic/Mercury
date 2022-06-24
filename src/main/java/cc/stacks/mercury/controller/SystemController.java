@@ -4,6 +4,7 @@ import cc.stacks.mercury.MercuryApplication;
 import cc.stacks.mercury.config.Access;
 import cc.stacks.mercury.config.SystemConfig;
 import cc.stacks.mercury.service.SystemService;
+import cc.stacks.mercury.util.SecurityUtil;
 import cc.stacks.mercury.util.TextUtil;
 import cc.stacks.mercury.util.Transit;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class SystemController {
     // 获取初始化数据
     @ResponseBody
     @GetMapping(value = "/init")
-    public Transit<Object> initBase() {
+    public Transit<Object> initBase(HttpServletRequest request) {
         Map<String, String> data = new HashMap<>();
         data.put("name", sysName);
         data.put("version", sysVersion);
@@ -48,6 +48,10 @@ public class SystemController {
 
         data.put("theme", SystemConfig.getBoolean("page:theme:dark") ? "dark":"light");
         data.put("color", SystemConfig.get("page:theme:color"));
+
+        String ip = SecurityUtil.extractIP(request);
+        data.put("ip", ip);
+        data.put("inside", SecurityUtil.isLocalHost(ip)+"");
 
         return Transit.success(data);
     }
