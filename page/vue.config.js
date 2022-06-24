@@ -15,6 +15,16 @@ module.exports = {
             },
         },
     },
+    pwa: {
+        name: 'Mercury',
+        manifestOptions: {
+            name: 'Mercury',
+            short_name: 'Mercury',
+            description: 'An easy-to-use and private intranet portal'
+        },
+        appleMobileWebAppCapable: 'yes',
+        appleMobileWebAppStatusBarStyle: 'black'
+    },
     configureWebpack: {
         optimization: {
             runtimeChunk: 'single',

@@ -40,6 +40,7 @@ export default {
   backdrop-filter: saturate(100%) blur(5px);
   background-color: rgba(255, 255, 255, 0.7);
   transition: all ease-in 0.3s;
+  transform: translateZ(0);
   border-radius: 6px;
   padding: 5px;
   height: 50px;
