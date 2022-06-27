@@ -38,14 +38,14 @@
 </template>
 
 <script>
-import MarkItem from "@/components/mark-item";
-import MarkItemSmall from "@/components/mark-item-small";
-import MarkGroup from "@/components/mark-group";
+import MarkItem from "@/components/mark/mark-item";
+import MarkItemSmall from "@/components/mark/mark-item-small";
+import MarkGroup from "@/components/mark/mark-group";
 import PageHeader from "@/components/page-header";
 import PageFoot from "@/components/page-foot";
 import Search from "@/components/search";
 import ToolGroup from "@/components/tool-group";
-import SettingDrawer from "@/components/setting-drawer";
+import SettingDrawer from "@/components/setting/setting-drawer";
 
 export default {
   name: 'Home',

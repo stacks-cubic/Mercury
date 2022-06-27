@@ -19,13 +19,13 @@ public class Mark {
     private String title;
     // 图标
     private String icon;
-    // 颜色
+    // 颜色(预留)
     private String color;
     // 描述
     private String describe;
     // 权重
     private Integer weight;
-    // 上级书签
+    // 上级书签(预留)
     private Integer superior;
     // 是否为服务
     private Boolean service;
@@ -33,7 +33,7 @@ public class Mark {
     private String era;
     // 内部地址
     private String ira;
-    // 隐藏 (0不隐藏,1隐藏,2对用户隐藏,3对游客隐藏,4对非添加人隐藏)
+    // 隐藏 (0不隐藏,1隐藏,2对用户隐藏,3对游客隐藏,4仅添加人可见)
     private Integer hide;
     // 添加时间
     private Long date;
