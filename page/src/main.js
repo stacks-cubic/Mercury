@@ -15,6 +15,7 @@ import {
     Switch,
     Drawer,
     Divider,
+    Badge,
     Modal,
     message
 } from 'ant-design-vue';
@@ -25,7 +26,7 @@ import './plugin/pwa'
 
 const app = createApp(App);
 app.use(store).use(router).use(Button).use(Spin).use(Result).use(Form).use(Input).use(Steps).use(Select).use(Row)
-    .use(Col).use(Tag).use(Collapse).use(Switch).use(Drawer).use(Divider).mount('#app');
+    .use(Col).use(Tag).use(Collapse).use(Switch).use(Drawer).use(Divider).use(Badge).mount('#app');
 app.config.globalProperties.$message = message;
 app.config.globalProperties.$modal = Modal;
 app.config.globalProperties.$api = api;

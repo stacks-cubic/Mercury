@@ -11,7 +11,7 @@
           <code-outlined class="icon" v-else-if="item.id === 4"/>
           <container-outlined class="icon" v-else-if="item.id === 5"/>
           <user-outlined class="icon" v-else-if="item.id === 6"/>
-          <experiment-outlined class="icon" v-else-if="item.id === 7"/>
+          <compass-outlined class="icon" v-else-if="item.id === 7"/>
         </setting-drawer-item>
       </template>
       <setting-sub-drawer ref="sub" />
@@ -27,7 +27,7 @@ import {
   CodeOutlined,
   ContainerOutlined,
   UserOutlined,
-  ExperimentOutlined
+  CompassOutlined
 } from '@ant-design/icons-vue';
 import SettingSubDrawer from "@/components/setting/setting-sub-drawer";
 import SettingDrawerItem from "@/components/setting/setting-drawer-item";
@@ -43,7 +43,7 @@ export default {
     CodeOutlined,
     ContainerOutlined,
     UserOutlined,
-    ExperimentOutlined
+    CompassOutlined
   },
   data: () => ({
     show: false,
@@ -75,7 +75,7 @@ export default {
       },
       {
         id: 7,
-        title: '高级'
+        title: '代理'
       }
     ]
   }),
@@ -92,7 +92,6 @@ export default {
       }, 350);
     },
     openSub(id) {
-      console.log(id)
       this.$refs.sub.open(id);
     },
     buildTitle(id) {
@@ -102,7 +101,7 @@ export default {
       else if (id === 4) return '服务管理';
       else if (id === 5) return '书签管理';
       else if (id === 6) return '用户管理';
-      else if (id === 7) return '高级';
+      else if (id === 7) return '代理';
       return '';
     }
   }
