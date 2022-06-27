@@ -77,7 +77,7 @@
               </a-select>
             </a-form-item>
           </a-form>
-          <div class="pa-10" style="margin-top: -20px">背景</div>
+          <div class="px-10 pt-10" style="margin-top: -20px">背景</div>
           <a-form :label-col="label" class="border-bottom pa-10">
             <a-form-item label="背景轮换">
               <a-switch v-model:checked="form[0].switchImage"/>
@@ -95,23 +95,23 @@
               </a-select>
             </a-form-item>
           </a-form>
-          <div class="pa-10" style="margin-top: -20px">卡片</div>
+          <div class="px-10 pt-10" style="margin-top: -20px">卡片</div>
           <a-form :label-col="label" class="pa-10 pb-0">
             <a-form-item label="工具卡片">
-              <a-select v-model:value="form[0].toolsSize" style="width: 170px">
+              <a-select v-model:value="form[0].toolsStyle" style="width: 170px">
                 <a-select-option value="">不显示工具卡片</a-select-option>
                 <a-select-option value="long">长条卡片(图标在左)</a-select-option>
                 <a-select-option value="small">方形卡片(图标在上)</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="服务卡片">
-              <a-select v-model:value="form[0].serviceSize" style="width: 170px">
+              <a-select v-model:value="form[0].serviceStyle" style="width: 170px">
                 <a-select-option value="long">长条卡片(图标在左)</a-select-option>
                 <a-select-option value="small">方形卡片(图标在上)</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="书签卡片">
-              <a-select v-model:value="form[0].markSize" style="width: 170px">
+              <a-select v-model:value="form[0].markStyle" style="width: 170px">
                 <a-select-option value="long">长条卡片(图标在左)</a-select-option>
                 <a-select-option value="small">方形卡片(图标在上)</a-select-option>
               </a-select>
@@ -127,22 +127,188 @@
           </a-form>
         </template>
         <template v-else-if="subId === 2">
-          搜索引擎列表、设定默认搜索引擎、编辑搜索引擎配置
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="名称">
+              <a-input v-model:value="form[1].name"/>
+            </a-form-item>
+            <a-form-item label="默认引擎">
+              <a-switch v-model:checked="form[1].defaultEngine"/>
+            </a-form-item>
+            <a-form-item label="查询网址">
+              <a-input v-model:value="form[1].queryUrl"/>
+            </a-form-item>
+            <a-form-item label="自动补齐">
+              <a-switch v-model:checked="form[1].autoFill"/>
+            </a-form-item>
+            <a-form-item label="补齐接口">
+              <a-input v-model:value="form[1].fillUrl"/>
+            </a-form-item>
+            <a-form-item label="搜索历史">
+              <a-switch v-model:checked="form[1].searchHistory"/>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">引擎列表</div>
+          <div>
+            这是列表。。。
+          </div>
         </template>
         <template v-else-if="subId === 3">
-          分组列表、编辑分组
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="名称">
+              <a-input v-model:value="form[2].name"/>
+            </a-form-item>
+            <a-form-item label="排序权重">
+              <a-input v-model:value="form[2].weight"/>
+            </a-form-item>
+            <a-form-item label="默认折叠">
+              <a-switch v-model:checked="form[2].fold"/>
+            </a-form-item>
+            <a-form-item label="隐藏">
+              <a-select v-model:value="form[2].hide" style="width: 100px">
+                <a-select-option value="0">不隐藏</a-select-option>
+                <a-select-option value="1">隐藏</a-select-option>
+                <a-select-option value="2">对用户隐藏</a-select-option>
+                <a-select-option value="3">对游客隐藏</a-select-option>
+                <a-select-option value="4">对非添加人隐藏</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">分组列表</div>
+          <div>
+            这是列表。。。
+          </div>
         </template>
         <template v-else-if="subId === 4">
-          服务列表、服务模板更新、编辑服务、编辑模板
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="匹配标识">
+              <a-input v-model:value="form[3].ssid"/>
+            </a-form-item>
+            <a-form-item label="名称">
+              <a-input v-model:value="form[3].title"/>
+            </a-form-item>
+            <a-form-item label="分组">
+              <a-input v-model:value="form[3].gid"/>
+            </a-form-item>
+            <a-form-item label="排序权重">
+              <a-input v-model:value="form[3].weight"/>
+            </a-form-item>
+            <a-form-item label="描述信息">
+              <a-input v-model:value="form[3].describe"/>
+            </a-form-item>
+            <a-form-item label="外网地址">
+              <a-input v-model:value="form[3].era"/>
+            </a-form-item>
+            <a-form-item label="内网地址">
+              <a-input v-model:value="form[3].ira"/>
+            </a-form-item>
+            <a-form-item label="隐藏">
+              <a-select v-model:value="form[3].hide" style="width: 100px">
+                <a-select-option value="0">不隐藏</a-select-option>
+                <a-select-option value="1">隐藏</a-select-option>
+                <a-select-option value="2">对用户隐藏</a-select-option>
+                <a-select-option value="3">对游客隐藏</a-select-option>
+                <a-select-option value="4">对非添加人隐藏</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">服务列表</div>
+          <div>
+            这是列表。。。
+          </div>
+          <!-- TODO 更新服务配置 -->
         </template>
         <template v-else-if="subId === 5">
-          书签列表、书签导入导出、编辑书签
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="名称">
+              <a-input v-model:value="form[4].title"/>
+            </a-form-item>
+            <a-form-item label="分组">
+              <a-input v-model:value="form[4].gid"/>
+            </a-form-item>
+            <a-form-item label="排序权重">
+              <a-input v-model:value="form[4].weight"/>
+            </a-form-item>
+            <a-form-item label="描述信息">
+              <a-input v-model:value="form[4].describe"/>
+            </a-form-item>
+            <a-form-item label="地址">
+              <a-input v-model:value="form[4].era"/>
+            </a-form-item>
+            <a-form-item label="隐藏">
+              <a-select v-model:value="form[4].hide" style="width: 100px">
+                <a-select-option value="0">不隐藏</a-select-option>
+                <a-select-option value="1">隐藏</a-select-option>
+                <a-select-option value="2">对用户隐藏</a-select-option>
+                <a-select-option value="3">对游客隐藏</a-select-option>
+                <a-select-option value="4">对非添加人隐藏</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">书签列表</div>
+          <div>
+            这是列表。。。
+          </div>
+          <!-- TODO 书签导入导出 -->
         </template>
         <template v-else-if="subId === 6">
-          用户列表、编辑用户
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="用户名">
+              <a-input v-model:value="form[5].name"/>
+            </a-form-item>
+            <a-form-item label="昵称">
+              <a-input v-model:value="form[5].nickname"/>
+            </a-form-item>
+            <a-form-item label="登录密码">
+              <a-input v-model:value="form[5].password"/>
+            </a-form-item>
+            <a-form-item label="管理员">
+              <a-switch v-model:checked="form[5].admin"/>
+            </a-form-item>
+            <a-form-item label="安全令牌">
+              <a-switch v-model:checked="form[5].mfa"/>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">用户列表</div>
+          <div>
+            这是列表。。。
+          </div>
         </template>
         <template v-else-if="subId === 7">
-          代理设置、内网穿透
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="内网穿透">
+              <a-switch v-model:checked="form[6].pierce"/>
+            </a-form-item>
+            <a-form-item label="服务商">
+              <a-select v-model:value="form[6].service" style="width: 100px">
+                <a-select-option value="zerotier">ZeroTier</a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="网络标识">
+              <a-input v-model:value="form[6].networkId"/>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">内网代理</div>
+          <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="名称">
+              <a-input v-model:value="form[6].title"/>
+            </a-form-item>
+            <a-form-item label="主机地址">
+              <a-input v-model:value="form[6].host"/>
+            </a-form-item>
+            <a-form-item label="通讯端口">
+              <a-input v-model:value="form[6].port"/>
+            </a-form-item>
+            <a-form-item label="访问来源">
+              <a-input v-model:value="form[6].source"/>
+            </a-form-item>
+            <a-form-item label="穿透代理">
+              <a-switch v-model:checked="form[6].mode"/>
+            </a-form-item>
+          </a-form>
+          <div class="pa-10" style="margin-top: -20px">代理列表</div>
+          <div>
+            这是列表。。。
+          </div>
         </template>
       </a-drawer>
     </a-drawer>
@@ -187,16 +353,67 @@ export default {
       {
         name: '',
         dark: false,
-        image: '',
+        color: '',
+        textSize: '14',
         switchImage: false,
         autoImage: false,
+        image: '',
         imageSource: 'wallhaven',
-        toolsSize: 'long',
-        serviceSize: 'long',
-        markSize: 'long',
-        textSize: '14',
+        toolsStyle: 'long',
+        serviceStyle: 'long',
+        markStyle: 'long',
         phrase: false,
         phraseApi: 'hitokoto'
+      },
+      {
+        name: '',
+        defaultEngine: false,
+        queryUrl: '',
+        searchTips: false,
+        autoFill: false,
+        fillUrl: '',
+        searchHistory: false
+      },
+      {
+        name: '',
+        weight: 0,
+        fold: false,
+        hide: '0'
+      },
+      {
+        ssid: '',
+        title: '',
+        gid: 0,
+        weight: 0,
+        describe: '',
+        era: '',
+        ira: '',
+        hide: '0'
+      },
+      {
+        title: '',
+        gid: 0,
+        weight: 0,
+        describe: '',
+        era: '',
+        hide: '0'
+      },
+      {
+        name: '',
+        nickname: '',
+        password: '',
+        admin: false,
+        mfa: ''
+      },
+      {
+        pierce: false,
+        service: 'zerotier',
+        networkId: '',
+        title: '',
+        host: '',
+        port: 0,
+        source: '',
+        mode: false
       }
     ]
   }),
@@ -253,15 +470,19 @@ export default {
   font-size: 18px;
 }
 
-.drawer-btn{
+.drawer-btn {
   position: absolute;
   right: 10px;
   top: 10px;
 }
+
+.setting-item-drawer .ant-form-item {
+  margin-bottom: 10px;
+}
 </style>
 <style>
 .setting-drawer .ant-drawer-body,
-.setting-item-drawer .ant-drawer-body{
+.setting-item-drawer .ant-drawer-body {
   padding: 0;
 }
 

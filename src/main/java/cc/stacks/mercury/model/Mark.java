@@ -19,13 +19,13 @@ public class Mark {
     private String title;
     // 图标
     private String icon;
-    // 颜色
+    // 颜色(预留)
     private String color;
     // 描述
     private String describe;
     // 权重
     private Integer weight;
-    // 上级书签
+    // 上级书签(预留)
     private Integer superior;
     // 是否为服务
     private Boolean service;
