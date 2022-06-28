@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-![logo](../_media/logo.png)
+![logo](../../_media/logo.png)
 
 # 墨丘利 <small>0.0.1</small>
 

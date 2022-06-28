@@ -15,4 +15,5 @@
   * [覆盖默认页面](diy-page)
   * [离线模式(PWA)](pwa)
 * [常见问题](faq)
-* [变更记录](/changelog)
+* [变更记录(英文)](/main/changelog)
+* [其他](/main/zh-cn/other/catalogue)
