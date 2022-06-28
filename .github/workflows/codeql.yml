@@ -7,8 +7,7 @@ on:
     paths-ignore:
       - '**.md'
       - 'docs/**'
-  schedule:
-    - cron: '16 5 * * 3'
+      - '.github/workflows/**'
 
 jobs:
   analyze:
