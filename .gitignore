@@ -36,4 +36,3 @@ build/
 **/static/
 /application.yaml
 /data.db
-/page/yarn.lock
