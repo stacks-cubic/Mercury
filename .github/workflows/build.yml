@@ -25,12 +25,14 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache-dependency-path: './page/yarn.lock'
         cache: 'yarn'
     - name: Yarn CLI
       uses: CultureHQ/actions-yarn@v1.0.1
-    - run: cd page
     - run: yarn install
+      working-directory: './page'
     - run: yarn build
+      working-directory: './page'
     
   build_service:
     name: Build Service
