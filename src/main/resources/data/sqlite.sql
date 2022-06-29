@@ -84,8 +84,19 @@ values (1, 'db:version', '1.0.0'),
        (4, 'user:register:oauth2', '0'),
        (5, 'network:proxy:mode', '0'),
        (6, 'network:zt:id', ''),
-       (7, 'page:theme:dark', false),
-       (8, 'page:theme:color', '#333333');
+       (7, 'page:theme:dark', 'false'),
+       (8, 'page:theme:color', '#333333'),
+       (9, 'page:theme:textSize', 14),
+       (10, 'page:theme:switchImage', 'false'),
+       (11, 'page:theme:autoImage', 'false'),
+       (12, 'page:theme:image', ''),
+       (13, 'page:theme:imageSource', 'wallhaven'),
+       (14, 'page:theme:toolsStyle', 'long'),
+       (15, 'page:theme:serviceStyle', 'long'),
+       (16, 'page:theme:markStyle', 'long'),
+       (17, 'page:theme:phrase', 'false'),
+       (18, 'page:theme:phraseApi', 'hitokoto');
+
 -- 创建初始管理员
 insert into user(id, name, nickname, password, admin, add_time)
 values (61201, ${adminName}, ${adminNickname}, ${adminPassword}, 1, ${addTime});

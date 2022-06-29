@@ -34,6 +34,7 @@
         <mybatis.version>2.2.2</mybatis.version>
         <mysql.version>8.0.29</mysql.version>
         <java.version>17</java.version>
+        <fastjson.version>2.0.8</fastjson.version>
     </properties>
 
     <dependencies>
@@ -87,6 +88,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>

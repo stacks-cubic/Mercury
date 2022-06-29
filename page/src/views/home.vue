@@ -108,7 +108,7 @@ export default {
       let info = localStorage.getItem('app:info');
       if (info) {
         this.info = JSON.parse(info);
-        this.inside = this.info.inside === 'true';
+        this.inside = this.info.inside;
       }
       let blur = localStorage.getItem('app:blur') === 'true';
       if (blur) this.blur = blur;
