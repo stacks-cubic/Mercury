@@ -4,15 +4,18 @@
               :destroyOnClose="true" :push="{distance:150}" :title="sub.title" placement="right">
       <template #extra>
         <div class="drawer-btn">
-          <a-button class="mr-5" :disabled="loading" v-if="sub.id !== 1" @click="openForm('add')">添加</a-button>
-          <a-button type="primary" :disabled="loading" v-if="sub.id === 1 || sub.id === 7">保存</a-button>
+          <a-button class="mr-5" :disabled="loading || update" v-if="sub.id !== 1" @click="openForm('add')">添加
+          </a-button>
+          <a-button type="primary" :disabled="loading" v-if="sub.id === 1 || sub.id === 7" :loading="update"
+                    @click="save">保存
+          </a-button>
         </div>
       </template>
-      <a-spin size="large" :spinning="loading">
+      <a-spin size="large" :spinning="loading || update">
         <template v-if="sub.id === 1">
           <a-form :label-col="label" class="border-bottom pa-10">
             <a-form-item label="系统名称">
-              <a-input v-model:value="form[0].name"/>
+              <a-input v-model:value="form[0].name" disabled/>
             </a-form-item>
             <a-form-item label="黑暗模式">
               <a-switch v-model:checked="form[0].dark"/>
@@ -221,6 +224,7 @@ export default {
     show: false,
     visible: false,
     loading: false,
+    update: false,
     label: {
       style: {width: '75px'}
     },
@@ -333,7 +337,7 @@ export default {
             this.close();
           }
           localStorage.setItem('app:info', JSON.stringify(res.data))
-        }, 200)).catch(() => {
+        }, 500)).catch(() => {
           this.showWarn('网络异常, 无法连接到服务器');
           this.visible = false;
           this.close();
@@ -357,7 +361,29 @@ export default {
       else if (type === 3) return '对游客隐藏';
       else if (type === 4) return '仅添加人可见';
       return '未知'
-    }
+    },
+    save() {
+      this.update = true;
+      this.$api.setting.update(this.sub.id, this.form[this.sub.id - 1]).then(res => setTimeout(() => {
+        this.update = false;
+        if (res.state) {
+          this.$message.success('保存成功');
+          this.loadData();
+          setTimeout(() => this.$modal.confirm({
+            title: '重新加载',
+            content: '个性化和设置已保存, 重新加载页面即可生效, 现在就重新加载吗?',
+            okText: '重新加载',
+            cancelText: '取消',
+            onOk: () => {
+              location.reload();
+            }
+          }), 500);
+        } else this.$message.warn(res.message ? res.message : '保存失败');
+      }, 1000)).catch(() => {
+        this.$message.warn('网络异常, 无法连接到服务器');
+        this.update = false;
+      })
+    },
   }
 }
 </script>
