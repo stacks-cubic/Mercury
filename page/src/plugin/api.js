@@ -18,6 +18,12 @@ const system = {
             method: 'GET'
         })
     },
+    reboot: () => {
+        return request({
+            url: '/sys/reboot',
+            method: 'GET'
+        })
+    },
     testDb: form => {
         let data = new URLSearchParams();
         if(form.dbUrl) data.append('dbUrl', form.dbUrl);

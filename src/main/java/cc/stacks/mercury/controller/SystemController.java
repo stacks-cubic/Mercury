@@ -46,8 +46,18 @@ public class SystemController {
 
         if (!initState) return Transit.failure(10001,data);
 
-        data.put("theme", SystemConfig.getBoolean("page:theme:dark") ? "dark":"light");
+        data.put("dark", SystemConfig.getBoolean("page:theme:dark")+"");
         data.put("color", SystemConfig.get("page:theme:color"));
+        data.put("textSize", SystemConfig.get("page:theme:textSize"));
+        data.put("switchImage", SystemConfig.get("page:theme:switchImage"));
+        data.put("autoImage", SystemConfig.get("page:theme:autoImage"));
+        data.put("image", SystemConfig.get("page:theme:image"));
+        data.put("imageSource", SystemConfig.get("page:theme:imageSource"));
+        data.put("toolsStyle", SystemConfig.get("page:theme:toolsStyle"));
+        data.put("serviceStyle", SystemConfig.get("page:theme:serviceStyle"));
+        data.put("markStyle", SystemConfig.get("page:theme:markStyle"));
+        data.put("phrase", SystemConfig.get("page:theme:phrase"));
+        data.put("phraseApi", SystemConfig.get("page:theme:phraseApi"));
 
         String ip = SecurityUtil.extractIP(request);
         data.put("ip", ip);

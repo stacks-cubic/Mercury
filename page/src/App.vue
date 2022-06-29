@@ -24,9 +24,11 @@ export default {
   methods: {
     init() {
       this.$api.system.init().then(res => setTimeout(() => {
-        localStorage.setItem('app:info', JSON.stringify(res.data))
         if (res.state) {
-          this.dark = res.data.theme === 'dark';
+          res.data.dark = res.data.dark === 'true';
+          res.data.switchImage = res.data.switchImage === 'true';
+          res.data.autoImage = res.data.autoImage === 'true';
+          res.data.phrase = res.data.phrase === 'true';
           this.closeLoading(400);
           if (this.$route.path === '/' || this.$route.path.startsWith("/error/")) this.$router.replace('/home');
         } else {
@@ -35,6 +37,7 @@ export default {
             this.closeLoading(400);
           }
         }
+        localStorage.setItem('app:info', JSON.stringify(res.data))
       }, 200)).catch(err => {
         this.$router.replace('/error/' + (err === 'ERR_NETWORK' ? 'network' : 'unknown'));
         this.closeLoading(150);
@@ -54,7 +57,7 @@ export default {
     let info = localStorage.getItem('app:info');
     if(info) {
       info = JSON.parse(info);
-      this.dark = info.theme === 'dark';
+      this.dark = info.dark;
     }
     setTimeout(() => this.init(), 200);
   }

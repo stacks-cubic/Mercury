@@ -233,16 +233,16 @@ export default {
         name: '',
         dark: false,
         color: '',
-        textSize: '14',
+        textSize: '',
         switchImage: false,
         autoImage: false,
         image: '',
-        imageSource: 'wallhaven',
-        toolsStyle: 'long',
-        serviceStyle: 'long',
-        markStyle: 'long',
+        imageSource: '',
+        toolsStyle: '',
+        serviceStyle: '',
+        markStyle: '',
         phrase: false,
-        phraseApi: 'hitokoto'
+        phraseApi: ''
       },
       {
         name: '',
@@ -318,10 +318,27 @@ export default {
     },
     loadData() {
       this.loading = true;
-      // 加载数据
-      setTimeout(() => {
-        this.loading = false;
-      }, 1500)
+      if (this.sub.id === 1) {
+        this.$api.system.init().then(res => setTimeout(() => {
+          if (res.state) {
+            res.data.dark = res.data.dark === 'true';
+            res.data.switchImage = res.data.switchImage === 'true';
+            res.data.autoImage = res.data.autoImage === 'true';
+            res.data.phrase = res.data.phrase === 'true';
+            this.form[this.sub.id - 1] = res.data;
+            this.loading = false;
+          } else {
+            this.showWarn(res.message ? res.message : '数据加载失败');
+            this.visible = false;
+            this.close();
+          }
+          localStorage.setItem('app:info', JSON.stringify(res.data))
+        }, 200)).catch(() => {
+          this.showWarn('网络异常, 无法连接到服务器');
+          this.visible = false;
+          this.close();
+        })
+      }
     },
     buildTitle(id) {
       if (id === 1) return '个性化';
