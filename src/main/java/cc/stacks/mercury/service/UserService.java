@@ -1,5 +1,6 @@
 package cc.stacks.mercury.service;
 
+import cc.stacks.mercury.data.TokenData;
 import cc.stacks.mercury.data.UserData;
 import cc.stacks.mercury.model.User;
 import cc.stacks.mercury.util.SecurityUtil;
@@ -14,27 +15,33 @@ import java.util.List;
 public class UserService {
 
     private final UserData userData;
+    private final TokenData tokenData;
 
-    public UserService(UserData userData) {
+    public UserService(UserData userData, TokenData tokenData) {
         this.userData = userData;
+        this.tokenData = tokenData;
     }
 
     /**
      * 登录账户
-     * @param name 用户名
+     *
+     * @param name     用户名
      * @param password 密码
-     * @param code 验证码
+     * @param code     验证码
      * @return 登录状态
      */
-    public Transit<Object> login(String name, String password, String code) {
+    public Transit<Object> login(String name, String password, String code, String platform, String device, String ip) {
         try {
             User user = userData.getPrivacyItem(name, password);
             if (!TextUtil.isNull(user.getMfa())) {
                 if (TextUtil.isNull(code)) return Transit.failure("请输入双因素验证码");
-                if (!TOTPUtil.valid(user.getMfa(),code)) return Transit.failure("双因素验证码错误");
+                if (!TOTPUtil.valid(user.getMfa(), code)) return Transit.failure("双因素验证码错误");
             }
-            // TODO 签发令牌
-            return Transit.success();
+            long now = System.currentTimeMillis();
+            String token = SecurityUtil.digestMD5("M:" + user.getId() + ":" + platform + ":" + device + ":" + ip + (TextUtil.isNull(code) ? "" : ":" + code) + "$" + now);
+            if (tokenData.add(token, user.getId(), !SecurityUtil.isLocalHost(ip), ip, platform, device, now, now + (60000 * 60 * 24 * 7)) == 1)
+                return Transit.success(token);
+            return Transit.failure();
         } catch (Exception e) {
             return Transit.failure();
         }
