@@ -35,6 +35,7 @@
         <mysql.version>8.0.29</mysql.version>
         <java.version>17</java.version>
         <fastjson.version>2.0.8</fastjson.version>
+        <codec.version>1.15</codec.version>
     </properties>
 
     <dependencies>
@@ -94,6 +95,12 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
             <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${codec.version}</version>
         </dependency>
 
         <dependency>
