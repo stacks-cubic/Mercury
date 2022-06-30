@@ -1,10 +1,32 @@
 package cc.stacks.mercury.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 
 @SuppressWarnings("unused")
 public class SecurityUtil {
+
+    /**
+     * MD5摘要
+     *
+     * @param text 原始文本
+     * @return 摘要码
+     */
+    public static String digestMD5(String text) {
+        return DigestUtils.md5Hex(text);
+    }
+
+    /**
+     * MD5摘要
+     *
+     * @param textByte 原始字节
+     * @return 摘要码
+     */
+    public static String digestMD5(byte[] textByte) {
+        return DigestUtils.md5Hex(textByte);
+    }
 
     /**
      * 提取IP地址
