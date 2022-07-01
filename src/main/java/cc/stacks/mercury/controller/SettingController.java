@@ -36,6 +36,7 @@ public class SettingController {
     }
 
     // 更新个性化设置
+    @Access(admin = true)
     @ResponseBody
     @PostMapping(value = "/update/p1")
     public Transit<Object> updateP1(P1 input) {

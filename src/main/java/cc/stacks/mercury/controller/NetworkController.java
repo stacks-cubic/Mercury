@@ -1,5 +1,6 @@
 package cc.stacks.mercury.controller;
 
+import cc.stacks.mercury.config.Access;
 import cc.stacks.mercury.service.zerotier.ZtCoreService;
 import cc.stacks.mercury.util.Transit;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ public class NetworkController {
     }
 
     // 启动Zt
+    @Access(admin = true)
     @ResponseBody
     @GetMapping(value = "/zt/start")
     public Transit<Object> startZt() {
@@ -30,6 +32,7 @@ public class NetworkController {
     }
 
     // 停止节点
+    @Access(admin = true)
     @ResponseBody
     @GetMapping(value = "/zt/stop")
     public Transit<Object> stopZt() {
