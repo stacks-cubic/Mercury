@@ -9,6 +9,8 @@ public class Token {
 
     // 令牌代码
     private String code;
+    // 是否为管理员
+    private Boolean admin;
     // 用户编号
     private Integer uid;
     // 是否外网
