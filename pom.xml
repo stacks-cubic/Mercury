@@ -36,6 +36,7 @@
         <java.version>17</java.version>
         <fastjson.version>2.0.8</fastjson.version>
         <codec.version>1.15</codec.version>
+        <caffeine.version>3.1.1</caffeine.version>
     </properties>
 
     <dependencies>
@@ -71,6 +72,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
 
         <dependency>
