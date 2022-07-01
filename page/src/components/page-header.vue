@@ -1,6 +1,6 @@
 <template>
   <div class="pa-10 header flex align-center justify-between full-width">
-    <a-button type="text" class="flex align-center px-10" @click="switchInside">
+    <a-button type="text" class="flex align-center px-10" @click="openEmit('switchInside')">
       <global-outlined style="font-size: 18px" v-if="inside"/>
       <deployment-unit-outlined style="font-size: 18px" v-else/>
       <div class="ml-5">{{ inside ? '切换外网' : '切换内网' }}</div>
@@ -11,22 +11,17 @@
           <bg-colors-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="mr-10" shape="circle" @click="openSetting">
+      <a-button type="text" class="mr-10" shape="circle" @click="openEmit('openSetting')">
         <template #icon>
           <setting-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="flex align-center pl-10 pr-10" @click="openDrawer('user')">
+      <a-button type="text" class="flex align-center pl-10 pr-10" @click="openEmit('openUser')">
         <user-outlined style="font-size: 18px"/>
         <div class="nickname line1 ml-5">登录</div>
       </a-button>
     </div>
   </div>
-  <a-drawer class="user-drawer no-select" v-model:visible="drawer.user" title="登录账户" :width="320" placement="right">
-    <p>登录账户</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-  </a-drawer>
 </template>
 
 <script>
@@ -52,12 +47,9 @@ export default {
     }
   },
   data: () => ({
-    drawer: {
-      setting: false,
-      user: false
-    }
+
   }),
-  emits: ["switchBlur", "switchInside", "openSetting"],
+  emits: ["switchBlur", "switchInside", "openSetting", "openUser"],
   methods: {
     switchBlur() {
       if (this.blur) {
@@ -76,14 +68,8 @@ export default {
         });
       }
     },
-    switchInside() {
-      this.$emit("switchInside", {});
-    },
-    openDrawer(type) {
-      this.drawer[type] = true;
-    },
-    openSetting() {
-      this.$emit("openSetting", {});
+    openEmit(active) {
+      this.$emit(active, {});
     }
   }
 }

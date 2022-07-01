@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,8 +26,8 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/auth/login")
-    public Transit<Object> startZt(HttpServletRequest request, String name, String password, String code) {
+    @PostMapping(value = "/auth/login")
+    public Transit<Object> login(HttpServletRequest request, String name, String password, String code) {
         if (!initState) return Transit.failure(10001);
         return userService.login(name, password, code, request.getHeader("User-Agent"), SecurityUtil.extractIP(request));
     }

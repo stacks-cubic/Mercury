@@ -11,7 +11,7 @@ public class UserAgentConfig {
     @Bean
     public UserAgentAnalyzer userAgentAnalyzer() {
         return UserAgentAnalyzer.newBuilder().showMinimalVersion().hideMatcherLoadStats()
-                .withField(UserAgent.DEVICE_CLASS).withField(UserAgent.OPERATING_SYSTEM_NAME_VERSION).withField(UserAgent.AGENT_NAME_VERSION)
+                .withField(UserAgent.DEVICE_CLASS).withField(UserAgent.OPERATING_SYSTEM_NAME).withField(UserAgent.AGENT_NAME_VERSION)
                 .withCache(10000).build();
     }
 

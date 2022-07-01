@@ -4,7 +4,7 @@
     <div class="background" :style="{backgroundImage: 'url(\''+bg+'\')'}"></div>
     <div class="container no-select">
       <page-header :blur="blur" :inside="inside" @switchBlur="switchBlur" @switchInside="switchInside"
-                   @openSetting="openSetting"/>
+                   @openSetting="openSetting" @openUser="openUser"/>
       <div class="box">
         <div class="title" :style="{color: info.color}">{{ info.name }}</div>
         <search/>
@@ -33,7 +33,8 @@
       </div>
       <page-foot :info="info"/>
     </div>
-    <setting-drawer ref="setting"/>
+    <setting-drawer ref="setting" />
+    <user-drawer ref="user" />
   </div>
 </template>
 
@@ -46,10 +47,12 @@ import PageFoot from "@/components/page-foot";
 import Search from "@/components/search";
 import ToolGroup from "@/components/tool-group";
 import SettingDrawer from "@/components/setting/setting-drawer";
+import UserDrawer from "@/components/user-drawer";
 
 export default {
   name: 'Home',
   components: {
+    UserDrawer,
     SettingDrawer,
     ToolGroup,
     Search,
@@ -60,8 +63,9 @@ export default {
     MarkItem
   },
   data: () => ({
-    inside: false,
     blur: false,
+    login: false,
+    inside: false,
     type: 1,
     info: {
       name: 'Mercury',
@@ -112,6 +116,7 @@ export default {
       }
       let blur = localStorage.getItem('app:blur') === 'true';
       if (blur) this.blur = blur;
+      this.login = Boolean(localStorage.getItem('app:token'));
     },
     switchBlur(state) {
       this.blur = state;
@@ -121,6 +126,9 @@ export default {
     },
     openSetting() {
       this.$refs.setting.open();
+    },
+    openUser() {
+      this.$refs.user.open();
     }
   },
   mounted() {

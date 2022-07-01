@@ -125,7 +125,7 @@ public class AccessInterceptor implements HandlerInterceptor {
             UserAgent userAgent = uaa.parse(agent);
             // 获取访问设备
             String device = userAgent.get(userAgent.DEVICE_CLASS).getValue();
-            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME_VERSION).getValue();
+            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME).getValue();
             // 获取访问平台
             data.put("platform", userAgent.get(userAgent.AGENT_NAME_VERSION).getValue());
             data.put("device", device);

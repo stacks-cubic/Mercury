@@ -55,7 +55,7 @@ public class UserService {
             String platform = userAgent.get(userAgent.AGENT_NAME_VERSION).getValue();
             // 获取访问设备
             String device = userAgent.get(userAgent.DEVICE_CLASS).getValue();
-            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME_VERSION).getValue();
+            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME).getValue();
             // 签发令牌
             String token = SecurityUtil.digestMD5("M:" + user.getId() + ":" + platform + ":" + device + ":" + ip + (TextUtil.isNull(code) ? "" : ":" + code) + "$" + now);
             // 存储令牌
@@ -66,6 +66,7 @@ public class UserService {
             }
             return Transit.failure();
         } catch (Exception e) {
+            e.printStackTrace();
             return Transit.failure();
         }
     }
