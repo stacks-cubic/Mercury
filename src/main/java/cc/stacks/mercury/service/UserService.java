@@ -7,6 +7,10 @@ import cc.stacks.mercury.util.SecurityUtil;
 import cc.stacks.mercury.util.TOTPUtil;
 import cc.stacks.mercury.util.TextUtil;
 import cc.stacks.mercury.util.Transit;
+import com.alibaba.fastjson2.JSON;
+import com.github.benmanes.caffeine.cache.Cache;
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +20,14 @@ public class UserService {
 
     private final UserData userData;
     private final TokenData tokenData;
+    private final UserAgentAnalyzer uaa;
+    private final Cache<String, Object> caffe;
 
-    public UserService(UserData userData, TokenData tokenData) {
+    public UserService(UserData userData, TokenData tokenData, UserAgentAnalyzer uaa, Cache<String, Object> caffe) {
         this.userData = userData;
         this.tokenData = tokenData;
+        this.uaa = uaa;
+        this.caffe = caffe;
     }
 
     /**
@@ -30,17 +38,32 @@ public class UserService {
      * @param code     验证码
      * @return 登录状态
      */
-    public Transit<Object> login(String name, String password, String code, String platform, String device, String ip) {
+    public Transit<Object> login(String name, String password, String code, String agent, String ip) {
         try {
+            // 查询用户隐私信息
             User user = userData.getPrivacyItem(name, password);
+            // 判断是否启用了双因素
             if (!TextUtil.isNull(user.getMfa())) {
                 if (TextUtil.isNull(code)) return Transit.failure("请输入双因素验证码");
                 if (!TOTPUtil.valid(user.getMfa(), code)) return Transit.failure("双因素验证码错误");
             }
+            // 获取当前时间
             long now = System.currentTimeMillis();
+            // 解析用户代理
+            UserAgent userAgent = uaa.parse(agent);
+            // 获取访问平台
+            String platform = userAgent.get(userAgent.AGENT_NAME_VERSION).getValue();
+            // 获取访问设备
+            String device = userAgent.get(userAgent.DEVICE_CLASS).getValue();
+            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME_VERSION).getValue();
+            // 签发令牌
             String token = SecurityUtil.digestMD5("M:" + user.getId() + ":" + platform + ":" + device + ":" + ip + (TextUtil.isNull(code) ? "" : ":" + code) + "$" + now);
-            if (tokenData.add(token, user.getId(), !SecurityUtil.isLocalHost(ip), ip, platform, device, now, now + (60000 * 60 * 24 * 7)) == 1)
+            // 存储令牌
+            if (tokenData.add(token, user.getId(), !SecurityUtil.isLocalHost(ip), ip, platform, device, now, now + (60000 * 60 * 24 * 7)) == 1) {
+                caffe.put("token:" + token, JSON.toJSONString(tokenData.getItem(token)));
+                caffe.put("agent:" + SecurityUtil.digestMD5(agent), "{\"platform\":\"" + platform + "\",\"device\":\"" + device + "\"}");
                 return Transit.success(token);
+            }
             return Transit.failure();
         } catch (Exception e) {
             return Transit.failure();

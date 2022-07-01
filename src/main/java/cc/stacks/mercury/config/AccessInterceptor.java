@@ -3,9 +3,12 @@ package cc.stacks.mercury.config;
 import cc.stacks.mercury.data.TokenData;
 import cc.stacks.mercury.model.Token;
 import cc.stacks.mercury.service.ProxyService;
+import cc.stacks.mercury.util.SecurityUtil;
 import cc.stacks.mercury.util.TextUtil;
 import com.alibaba.fastjson2.JSON;
 import com.github.benmanes.caffeine.cache.Cache;
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -16,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 访问控制拦截器
@@ -27,11 +32,13 @@ import java.lang.reflect.Method;
 public class AccessInterceptor implements HandlerInterceptor {
 
     private final TokenData tokenData;
+    private final UserAgentAnalyzer uaa;
     private final ProxyService proxyService;
     private final Cache<String, Object> caffe;
 
-    public AccessInterceptor(ProxyService proxyService, Cache<String, Object> caffe, TokenData tokenData) {
+    public AccessInterceptor(ProxyService proxyService, UserAgentAnalyzer uaa, Cache<String, Object> caffe, TokenData tokenData) {
         this.proxyService = proxyService;
+        this.uaa = uaa;
         this.caffe = caffe;
         this.tokenData = tokenData;
     }
@@ -56,8 +63,9 @@ public class AccessInterceptor implements HandlerInterceptor {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json; charset=utf-8");
                 try (PrintWriter writer = response.getWriter()) {
-                    writer.print("{\"state\":false,\"message\":\"" + checkAccessError + "\",\"code\":" + 1000001 + ",\"time\":\""+System.currentTimeMillis()+"\"}");
-                } catch (Exception ignored) {}
+                    writer.print("{\"state\":false,\"message\":\"" + checkAccessError + "\",\"code\":" + 1000001 + ",\"time\":\"" + System.currentTimeMillis() + "\"}");
+                } catch (Exception ignored) {
+                }
                 return false;
             }
         }
@@ -87,9 +95,13 @@ public class AccessInterceptor implements HandlerInterceptor {
             caffe.getIfPresent(tag);
             Object cache = caffe.asMap().get(tag);
             // 解析令牌
-            Token token = cache == null ? tokenData.getItem(auth) : JSON.parseObject(String.valueOf(cache), Token.class);
-            // 校验令牌有效期
-            String checkMsg = check(auth, token);
+            Token token;
+            if (cache == null) {
+                token = tokenData.getItem(auth);
+                caffe.put(tag, JSON.toJSONString(token));
+            } else token = JSON.parseObject(String.valueOf(cache), Token.class);
+            // 校验令牌是否有效
+            String checkMsg = check(auth, request.getHeader("User-Agent"), token);
             if (checkMsg != null) return checkMsg;
             // 校验管理权限
             if (access.admin() && !token.getAdmin()) return "权限不足";
@@ -101,7 +113,27 @@ public class AccessInterceptor implements HandlerInterceptor {
         return null;
     }
 
-    private String check(String auth, Token token) {
+    private String check(String auth, String agent, Token token) {
+        String tag = "agent:" + SecurityUtil.digestMD5(agent);
+        // 获取设备缓存
+        caffe.getIfPresent(tag);
+        Object cache = caffe.asMap().get(tag);
+        Map<String, String> data;
+        if (cache == null) {
+            data = new HashMap<>();
+            // 解析用户代理
+            UserAgent userAgent = uaa.parse(agent);
+            // 获取访问设备
+            String device = userAgent.get(userAgent.DEVICE_CLASS).getValue();
+            device += "|" + userAgent.get(userAgent.OPERATING_SYSTEM_NAME_VERSION).getValue();
+            // 获取访问平台
+            data.put("platform", userAgent.get(userAgent.AGENT_NAME_VERSION).getValue());
+            data.put("device", device);
+        } else data = JSON.parseObject(String.valueOf(cache), Map.class);
+        if (!data.get("platform").equals(token.getPlatform())) return "访问平台未在令牌授权范围";
+        if (!data.get("device").equals(token.getDevice())) return "访问设备未在令牌授权范围";
+        caffe.put(tag, JSON.toJSONString(data));
+        // 校验令牌有效期
         if (token.getIssued() > System.currentTimeMillis()) return "访问令牌暂未生效";
         if (token.getExpire() < System.currentTimeMillis()) {
             // 移除失效令牌
