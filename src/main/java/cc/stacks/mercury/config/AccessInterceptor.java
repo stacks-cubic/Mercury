@@ -50,13 +50,13 @@ public class AccessInterceptor implements HandlerInterceptor {
         // 获取代理模式
         int proxyMode = SystemConfig.getInt("network:proxy:mode");
         // 代理指定来源
-        if ("127.0.0.1:20200".equals(request.getHeader("Host"))) {
-            if (proxyMode == 1) proxyService.direct("192.168.1.200", 9820, request, response);
-            else if (proxyMode == 2 && !TextUtil.isNull(SystemConfig.get("network:zt:id")))
-                proxyService.pierce("192.168.192.1", 9820, request, response);
-            else return true;
-            return false;
-        } else {
+//        if ("127.0.0.1:20200".equals(request.getHeader("Host"))) {
+//            if (proxyMode == 1) proxyService.direct("192.168.1.200", 9820, request, response);
+//            else if (proxyMode == 2 && !TextUtil.isNull(SystemConfig.get("network:zt:id")))
+//                proxyService.pierce("192.168.192.1", 9820, request, response);
+//            else return true;
+//            return false;
+//        } else {
             // 访问权限校验
             String checkAccessError = checkAccess(method.getAnnotation(Access.class), request);
             if (checkAccessError != null) {
@@ -68,7 +68,7 @@ public class AccessInterceptor implements HandlerInterceptor {
                 }
                 return false;
             }
-        }
+//        }
         return true;
     }
 

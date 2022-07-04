@@ -1,9 +1,10 @@
 package cc.stacks.mercury.controller;
 
+import cc.stacks.mercury.config.Access;
+import cc.stacks.mercury.model.User;
 import cc.stacks.mercury.service.UserService;
 import cc.stacks.mercury.util.SecurityUtil;
 import cc.stacks.mercury.util.Transit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,16 @@ public class UserController {
     public Transit<Object> login(HttpServletRequest request, String name, String password, String code) {
         if (!initState) return Transit.failure(10001);
         return userService.login(name, password, code, request.getHeader("User-Agent"), SecurityUtil.extractIP(request));
+    }
+
+    @Access
+    @ResponseBody
+    @GetMapping(value = "/my/info")
+    public Transit<Object> getMyInfo(HttpServletRequest request) {
+        int uid = Integer.parseInt(request.getAttribute("uid").toString());
+        User user = userService.getItem(uid);
+        if (user == null) return Transit.failure();
+        return Transit.success(user);
     }
 
 }

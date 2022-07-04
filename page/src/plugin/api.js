@@ -72,6 +72,12 @@ const user = {
             method: 'POST',
             data
         })
+    },
+    getMyInfo: () => {
+        return request({
+            url: '/user/my/info',
+            method: 'GET'
+        })
     }
 }
 

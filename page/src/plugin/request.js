@@ -10,9 +10,9 @@ const request = axios.create({
 
 request.interceptors.request.use(
     config => {
-        let token = localStorage.getItem("user:token");
+        let token = localStorage.getItem("app:token");
         if (token) {
-            config.headers['Authorization'] = token;
+            config.headers['Authorization'] = 'Bearer '+token;
         }
         return config
     },
@@ -25,7 +25,7 @@ request.interceptors.response.use(
     response => {
         let code = parseInt(response.data.code);
         if (code >= 10010 && code <= 10012) {
-            localStorage.removeItem("user:token");
+            localStorage.removeItem("app:token");
             message.error({
                 content: response.data.message,
                 key: 'LOGIN'

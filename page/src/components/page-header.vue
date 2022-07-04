@@ -11,14 +11,15 @@
           <bg-colors-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="mr-10" shape="circle" @click="openEmit('openSetting')">
+      <a-button type="text" class="mr-10" shape="circle" @click="openEmit('setting')" v-if="login && user.admin">
         <template #icon>
           <setting-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="flex align-center pl-10 pr-10" @click="openEmit('openUser')">
+      <a-button type="text" class="flex align-center pl-10 pr-10" :disabled="loading" @click="openEmit('user')"
+                style="max-width: 105px">
         <user-outlined style="font-size: 18px"/>
-        <div class="nickname line1 ml-5">登录</div>
+        <div class="nickname line1 ml-5">{{ login ? user.nickname : '登录' }}</div>
       </a-button>
     </div>
   </div>
@@ -47,9 +48,16 @@ export default {
     }
   },
   data: () => ({
-
+    login: false,
+    loading: false,
+    user: {
+      admin: false,
+      mfa: false,
+      name: '',
+      nickname: '登录中',
+    }
   }),
-  emits: ["switchBlur", "switchInside", "openSetting", "openUser"],
+  emits: ["switchBlur", "switchInside", "openDrawer"],
   methods: {
     switchBlur() {
       if (this.blur) {
@@ -69,7 +77,24 @@ export default {
       }
     },
     openEmit(active) {
-      this.$emit(active, {});
+      this.$emit('openDrawer', active);
+    },
+    switchLogin(state) {
+      this.login = state;
+      if (state) this.getInfo();
+    },
+    getInfo() {
+      this.loading = true;
+      this.$api.user.getMyInfo().then(res => setTimeout(() => {
+        this.loading = false;
+        if (res.state) {
+          res.data.mfa = res.data.mfa === 'true';
+          this.user = res.data;
+        }
+      }, 500)).catch(() => {
+        this.loading = false;
+        this.$message.warn('网络异常, 无法连接到服务器');
+      })
     }
   }
 }
@@ -90,7 +115,7 @@ export default {
 }
 </style>
 <style>
-.user-drawer .ant-drawer-header{
+.user-drawer .ant-drawer-header {
   padding: 15px;
 }
 </style>
