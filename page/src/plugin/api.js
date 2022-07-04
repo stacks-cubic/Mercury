@@ -117,6 +117,12 @@ const mark = {
             method: 'POST',
             data
         })
+    },
+    removeGroup: gid =>{
+        return request({
+            url: '/mark/group/'+gid,
+            method: 'DELETE'
+        })
     }
 }
 

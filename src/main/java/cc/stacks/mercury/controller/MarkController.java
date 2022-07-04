@@ -75,4 +75,15 @@ public class MarkController {
         return Transit.auto(groupService.update(gid, name, fold, hide, weight, uid, admin));
     }
 
+    @Access
+    @ResponseBody
+    @DeleteMapping(value = "/group/{gid}")
+    public Transit<Object> removeGroup(HttpServletRequest request, @PathVariable Integer gid) {
+        if (!initState) return Transit.failure(10001);
+        if (TextUtil.isNull(gid)) return Transit.failure("Group id cannot be empty");
+        int uid = Integer.parseInt(request.getAttribute("uid").toString());
+        boolean admin = Boolean.parseBoolean(request.getAttribute("admin").toString());
+        return Transit.auto(groupService.delete(gid, uid, admin));
+    }
+
 }

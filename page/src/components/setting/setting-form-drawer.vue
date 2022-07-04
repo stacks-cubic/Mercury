@@ -4,7 +4,10 @@
               :destroyOnClose="true"
               :title="mode === 'add' ? '新增' : '编辑'" placement="right">
       <template #extra>
-        <a-button type="primary" class="drawer-btn" :disabled="loading" :loading="update" @click="save">保存</a-button>
+        <div class="drawer-btn">
+          <a-button type="primary" :disabled="loading || update" v-if="mode === 'edit'" @click="remove" class="mr-5" danger>删除</a-button>
+          <a-button type="primary" :disabled="loading" :loading="update" @click="save">保存</a-button>
+        </div>
       </template>
       <a-spin size="large" :spinning="loading">
         <template v-if="type === 2">
@@ -184,7 +187,7 @@ export default {
       this.show = true;
       setTimeout(() => {
         this.visible = true;
-        if(this.mode === 'edit') this.loadData();
+        if (this.mode === 'edit') this.loadData();
       }, 100);
     },
     close() {
@@ -250,7 +253,7 @@ export default {
         this.$api.mark.getGroupInfo(this.id).then(res => setTimeout(() => {
           if (res.state) {
             this.loading = false;
-            res.data.hide = ''+res.data.hide;
+            res.data.hide = '' + res.data.hide;
             this.form[2] = res.data;
           } else {
             this.close();
@@ -282,8 +285,8 @@ export default {
           }, 500)).catch(() => {
             this.update = false;
           })
-        }else{
-          this.$api.mark.updateGroup(this.id,this.form[this.type - 1]).then(res => setTimeout(() => {
+        } else {
+          this.$api.mark.updateGroup(this.id, this.form[this.type - 1]).then(res => setTimeout(() => {
             this.update = false;
             if (res.state) {
               this.$message.success('保存成功');
@@ -295,6 +298,30 @@ export default {
           })
         }
       }
+    },
+    remove(){
+      this.$modal.confirm({
+        title: '确认要删除吗?',
+        content: '此操作不可逆, 数据在删除后无法恢复, 确认删除?',
+        okText: '删除',
+        cancelText: '取消',
+        onOk: () => {
+          this.update = true;
+          if (this.type === 3) {
+            this.$api.mark.removeGroup(this.id).then(res => setTimeout(() => {
+              this.update = false;
+              if (res.state) {
+                this.$message.success('删除成功');
+                this.$emit("update", {});
+                this.visible = false;
+                this.close();
+              } else this.$message.warn(res.message ? res.message : '删除失败');
+            }, 500)).catch(() => {
+              this.update = false;
+            })
+          }
+        },
+      })
     }
   }
 }
