@@ -4,7 +4,7 @@
               :destroyOnClose="true"
               :title="mode === 'add' ? '新增' : '编辑'" placement="right">
       <template #extra>
-        <a-button type="primary" class="drawer-btn" :disabled="loading">保存</a-button>
+        <a-button type="primary" class="drawer-btn" :disabled="loading" :loading="update" @click="save">保存</a-button>
       </template>
       <a-spin size="large" :spinning="loading">
         <template v-if="type === 2">
@@ -32,16 +32,16 @@
         <template v-else-if="type === 3">
           <a-form :label-col="label" class="border-bottom pa-10">
             <a-form-item label="名称">
-              <a-input v-model:value="form[2].name"/>
+              <a-input v-model:value="form[2].name" :disabled="update"/>
             </a-form-item>
             <a-form-item label="排序权重">
-              <a-input v-model:value="form[2].weight"/>
+              <a-input v-model:value="form[2].weight" :disabled="update"/>
             </a-form-item>
             <a-form-item label="默认折叠">
-              <a-switch v-model:checked="form[2].fold"/>
+              <a-switch v-model:checked="form[2].fold" :disabled="update"/>
             </a-form-item>
             <a-form-item label="隐藏">
-              <a-select v-model:value="form[2].hide" style="width: 100px">
+              <a-select v-model:value="form[2].hide" :disabled="update" style="width: 130px">
                 <a-select-option value="0">不隐藏</a-select-option>
                 <a-select-option value="1">隐藏</a-select-option>
                 <a-select-option value="2">对用户隐藏</a-select-option>
@@ -166,71 +166,25 @@ export default {
     type: 0,
     mode: 'add',
     show: false,
+    update: false,
     visible: false,
     loading: false,
     label: {
       style: {width: '75px'}
     },
-    form: [
-      {},
-      {
-        name: '',
-        defaultEngine: false,
-        queryUrl: '',
-        searchTips: false,
-        autoFill: false,
-        fillUrl: '',
-        searchHistory: false
-      },
-      {
-        name: '',
-        weight: 0,
-        fold: false,
-        hide: '0'
-      },
-      {
-        ssid: '',
-        title: '',
-        gid: 0,
-        weight: 0,
-        describe: '',
-        era: '',
-        ira: '',
-        hide: '0'
-      },
-      {
-        title: '',
-        gid: 0,
-        weight: 0,
-        describe: '',
-        era: '',
-        hide: '0'
-      },
-      {
-        name: '',
-        nickname: '',
-        password: '',
-        admin: false,
-        mfa: ''
-      },
-      {
-        title: '',
-        host: '',
-        port: 0,
-        source: '',
-        mode: false
-      }
-    ]
+    form: []
   }),
+  emits: ["update"],
   methods: {
-    open(type, mode, title, id) {
+    open(type, mode, id) {
       this.type = type;
       this.mode = mode;
       this.id = id ? id : 0;
+      this.clean();
       this.show = true;
       setTimeout(() => {
         this.visible = true;
-        this.loadData();
+        if(this.mode === 'edit') this.loadData();
       }, 100);
     },
     close() {
@@ -238,12 +192,109 @@ export default {
         this.show = false;
       }, 350);
     },
+    clean() {
+      this.form = [
+        {},
+        {
+          name: '',
+          defaultEngine: false,
+          queryUrl: '',
+          searchTips: false,
+          autoFill: false,
+          fillUrl: '',
+          searchHistory: false
+        },
+        {
+          name: '',
+          weight: 0,
+          fold: false,
+          hide: '0'
+        },
+        {
+          ssid: '',
+          title: '',
+          gid: 0,
+          weight: 0,
+          describe: '',
+          era: '',
+          ira: '',
+          hide: '0'
+        },
+        {
+          title: '',
+          gid: 0,
+          weight: 0,
+          describe: '',
+          era: '',
+          hide: '0'
+        },
+        {
+          name: '',
+          nickname: '',
+          password: '',
+          admin: false,
+          mfa: ''
+        },
+        {
+          title: '',
+          host: '',
+          port: 0,
+          source: '',
+          mode: false
+        }
+      ]
+    },
     loadData() {
       this.loading = true;
-      // 加载数据
-      setTimeout(() => {
-        this.loading = false;
-      }, 1500)
+      if (this.type === 3) {
+        this.$api.mark.getGroupInfo(this.id).then(res => setTimeout(() => {
+          if (res.state) {
+            this.loading = false;
+            res.data.hide = ''+res.data.hide;
+            this.form[2] = res.data;
+          } else {
+            this.close();
+            this.visible = false;
+            this.$message.warn(res.message ? res.message : '加载失败');
+          }
+        }, 500)).catch(() => {
+          this.close();
+          this.visible = false;
+        })
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 1500)
+      }
+    },
+    save() {
+      if (this.type === 3) {
+        this.update = true;
+        if (this.mode === 'add') {
+          this.$api.mark.addGroup(this.form[this.type - 1]).then(res => setTimeout(() => {
+            this.update = false;
+            if (res.state) {
+              this.$message.success('保存成功');
+              this.$emit("update", {});
+              this.visible = false;
+              this.close();
+            } else this.$message.warn(res.message ? res.message : '保存失败');
+          }, 500)).catch(() => {
+            this.update = false;
+          })
+        }else{
+          this.$api.mark.updateGroup(this.id,this.form[this.type - 1]).then(res => setTimeout(() => {
+            this.update = false;
+            if (res.state) {
+              this.$message.success('保存成功');
+              this.$emit("update", {});
+              this.loadData();
+            } else this.$message.warn(res.message ? res.message : '保存失败');
+          }, 500)).catch(() => {
+            this.update = false;
+          })
+        }
+      }
     }
   }
 }

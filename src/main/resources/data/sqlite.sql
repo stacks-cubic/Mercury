@@ -1,15 +1,14 @@
 -- 配置表
 CREATE TABLE "config"
 (
-    "id"    INTEGER(2) NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "key"   TEXT NOT NULL,
-    "value" TEXT NOT NULL,
-    PRIMARY KEY ("id")
+    "value" TEXT NOT NULL
 );
 -- 用户表
 CREATE TABLE "user"
 (
-    "id"         INTEGER(5) NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "avatar"     TEXT,
     "name"       TEXT(24) NOT NULL,
     "nickname"   TEXT(24),
@@ -17,8 +16,7 @@ CREATE TABLE "user"
     "admin"      INTEGER(1) NOT NULL DEFAULT 0,
     "mfa"        TEXT(64),
     "add_time"   TEXT(15) NOT NULL,
-    "last_login" TEXT(15),
-    PRIMARY KEY ("id")
+    "last_login" TEXT(15)
 );
 -- 令牌表
 CREATE TABLE "token"
@@ -36,18 +34,17 @@ CREATE TABLE "token"
 -- 代理表
 CREATE TABLE "proxy"
 (
-    "id"     INTEGER(5) NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name"   TEXT(24) NOT NULL,
     "host"   TEXT(24) NOT NULL,
     "port"   INTEGER(5) NOT NULL,
     "source" TEXT(32) NOT NULL,
-    "mode"   INTEGER(1) NOT NULL,
-    PRIMARY KEY ("id")
+    "mode"   INTEGER(1) NOT NULL
 );
 -- 书签表
 CREATE TABLE "mark"
 (
-    "id"       INTEGER(5) NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "gid"      INTEGER(5),
     "uid"      INTEGER(5) NOT NULL,
     "ssid"     INTEGER(5) NOT NULL DEFAULT 0,
@@ -61,20 +58,18 @@ CREATE TABLE "mark"
     "era"      TEXT(64),
     "ira"      TEXT(64) NOT NULL,
     "hide"     INTEGER(1) NOT NULL DEFAULT 3,
-    "date"     TEXT(15) NOT NULL,
-    PRIMARY KEY ("id")
+    "date"     TEXT(15) NOT NULL
 );
 -- 分组表
 CREATE TABLE "group"
 (
-    "id"     INTEGER(5) NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "uid"    INTEGER(5) NOT NULL,
     "name"   TEXT(24) NOT NULL,
     "weight" INTEGER(3) NOT NULL DEFAULT 0,
     "fold"   INTEGER(1) NOT NULL DEFAULT 0,
     "hide"   INTEGER(1) NOT NULL DEFAULT 0,
-    "date"   TEXT(15) NOT NULL,
-    PRIMARY KEY ("id")
+    "date"   TEXT(15) NOT NULL
 );
 -- 创建系统配置
 insert into config(id, key, value)
@@ -96,7 +91,6 @@ values (1, 'db:version', '1.0.0'),
        (16, 'page:theme:markStyle', 'long'),
        (17, 'page:theme:phrase', 'false'),
        (18, 'page:theme:phraseApi', 'hitokoto');
-
 -- 创建初始管理员
 insert into user(id, name, nickname, password, admin, add_time)
 values (61201, ${adminName}, ${adminNickname}, ${adminPassword}, 1, ${addTime});

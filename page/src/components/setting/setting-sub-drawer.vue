@@ -108,22 +108,14 @@
         </template>
         <template v-else-if="sub.id === 3">
           <div class="list">
-            <div class="form-item flex align-center justify-between pa-10 border-bottom" @click="openForm('edit')">
+            <div class="form-item flex align-center justify-between pa-10 border-bottom" v-for="(item,i) in form[2]"
+                 :key="'group_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div class="flex align-center">
-                  <strong class="mr-5">分组1</strong>
-                  <a-tag color="#f50" class="tag">折叠</a-tag>
+                  <strong class="mr-5">{{item.name}}</strong>
+                  <a-tag color="#f50" class="tag" v-if="item.fold">折叠</a-tag>
                 </div>
-                <div class="text-small text-gray">仅添加人可见</div>
-              </div>
-              <right-outlined/>
-            </div>
-            <div class="form-item flex align-center justify-between pa-10 border-bottom" @click="openForm('edit')">
-              <div>
-                <div class="flex align-center">
-                  <strong class="mr-5">分组2</strong>
-                </div>
-                <div class="text-small text-gray">隐藏</div>
+                <div class="text-small text-gray">{{buildHide(item.hide)}}</div>
               </div>
               <right-outlined/>
             </div>
@@ -209,7 +201,7 @@
           </div>
         </template>
       </a-spin>
-      <setting-form-drawer ref="form"/>
+      <setting-form-drawer ref="form" @update="loadData" />
     </a-drawer>
   </template>
 </template>
@@ -257,12 +249,7 @@ export default {
         fillUrl: '',
         searchHistory: false
       },
-      {
-        name: '',
-        weight: 0,
-        fold: false,
-        hide: '0'
-      },
+      [],
       {
         ssid: '',
         title: '',
@@ -312,8 +299,8 @@ export default {
         this.loadData();
       }, 100);
     },
-    openForm(mode) {
-      this.$refs.form.open(this.sub.id, mode)
+    openForm(mode,id) {
+      this.$refs.form.open(this.sub.id, mode,id)
     },
     close() {
       setTimeout(() => {
@@ -337,11 +324,30 @@ export default {
             this.close();
           }
           localStorage.setItem('app:info', JSON.stringify(res.data))
-        }, 500)).catch(() => {
+        }, 300)).catch(() => {
           this.showWarn('网络异常, 无法连接到服务器');
           this.visible = false;
           this.close();
         })
+      } else if (this.sub.id === 3) {
+        this.$api.mark.getGroupList().then(res => setTimeout(() => {
+          if (res.state) {
+            this.form[this.sub.id - 1] = res.data;
+            this.loading = false;
+          } else {
+            this.showWarn(res.message ? res.message : '数据加载失败');
+            this.visible = false;
+            this.close();
+          }
+        }, 300)).catch(() => {
+          this.showWarn('网络异常, 无法连接到服务器');
+          this.visible = false;
+          this.close();
+        })
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 500);
       }
     },
     buildTitle(id) {
@@ -379,8 +385,7 @@ export default {
             }
           }), 500);
         } else this.$message.warn(res.message ? res.message : '保存失败');
-      }, 1000)).catch(() => {
-        this.$message.warn('网络异常, 无法连接到服务器');
+      }, 500)).catch(() => {
         this.update = false;
       })
     },

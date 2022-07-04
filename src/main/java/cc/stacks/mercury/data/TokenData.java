@@ -26,7 +26,7 @@ public interface TokenData {
     @Delete("DELETE FROM `token` WHERE  `external` = #{external}")
     int deleteByExternal(boolean external);
 
-    @Select("SELECT `code`,`uid`,`external`,`ip`,`platform`,`device`,`issued`,`expire` FROM `token` WHERE `code` = #{code}")
+    @Select("SELECT `token`.`code`, `token`.`uid`, `token`.`external`, `token`.`ip`, `token`.`platform`, `token`.`device`, `token`.`issued`, `token`.`expire`, `user`.`admin` FROM `token` LEFT JOIN `user` ON `user`.id = `token`.`uid` WHERE `token`.`code` = #{code}")
     Token getItem(String code);
 
     @Select("SELECT `code`,`uid`,`external`,`ip`,`platform`,`device`,`issued`,`expire` FROM `token` WHERE `uid` = #{uid}")

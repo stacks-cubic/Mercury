@@ -81,9 +81,49 @@ const user = {
     }
 }
 
+const mark = {
+    getGroupList: ()=>{
+        return request({
+            url: '/mark/group/list',
+            method: 'GET'
+        })
+    },
+    getGroupInfo: gid =>{
+        return request({
+            url: '/mark/group/'+gid,
+            method: 'GET'
+        })
+    },
+    addGroup: form =>{
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('fold', form.fold)
+        data.append('hide', form.hide)
+        data.append('weight', form.weight)
+        return request({
+            url: '/mark/group/add',
+            method: 'POST',
+            data
+        })
+    },
+    updateGroup: (gid,form) =>{
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('fold', form.fold)
+        data.append('hide', form.hide)
+        data.append('weight', form.weight)
+        return request({
+            url: '/mark/group/'+gid,
+            method: 'POST',
+            data
+        })
+    }
+}
+
 export default {
     host: process.env.VUE_APP_BASE_URL,
     system,
     setting,
-    user
+    user,
+    mark
 }

@@ -96,7 +96,6 @@ export default {
         }
       }, 500)).catch(() => {
         this.form.loading = false;
-        this.$message.warn('网络异常, 无法连接到服务器');
       })
     },
     getInfo() {
@@ -109,7 +108,6 @@ export default {
         this.info.loading = false;
       }, 500)).catch(() => {
         this.info.loading = false;
-        this.$message.warn('网络异常, 无法连接到服务器');
       })
     }
   }
