@@ -25,6 +25,7 @@ export default {
     init() {
       this.$api.system.init().then(res => setTimeout(() => {
         if (res.state) {
+          this.$store.commit('updateTheme',res.data);
           res.data.dark = res.data.dark === 'true';
           res.data.switchImage = res.data.switchImage === 'true';
           res.data.autoImage = res.data.autoImage === 'true';

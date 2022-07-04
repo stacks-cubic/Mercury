@@ -1,6 +1,6 @@
 <template>
   <div class="pa-10 header flex align-center justify-between full-width">
-    <a-button type="text" class="flex align-center px-10" @click="switchInside">
+    <a-button type="text" class="flex align-center px-10" @click="openEmit('switchInside')">
       <global-outlined style="font-size: 18px" v-if="inside"/>
       <deployment-unit-outlined style="font-size: 18px" v-else/>
       <div class="ml-5">{{ inside ? '切换外网' : '切换内网' }}</div>
@@ -11,22 +11,18 @@
           <bg-colors-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="mr-10" shape="circle" @click="openSetting">
+      <a-button type="text" class="mr-10" shape="circle" @click="openEmit('setting')" v-if="login && user.admin">
         <template #icon>
           <setting-outlined style="font-size: 18px"/>
         </template>
       </a-button>
-      <a-button type="text" class="flex align-center pl-10 pr-10" @click="openDrawer('user')">
+      <a-button type="text" class="flex align-center pl-10 pr-10" :disabled="loading" @click="openEmit('user')"
+                style="max-width: 105px">
         <user-outlined style="font-size: 18px"/>
-        <div class="nickname line1 ml-5">登录</div>
+        <div class="nickname line1 ml-5">{{ login ? user.nickname : '登录' }}</div>
       </a-button>
     </div>
   </div>
-  <a-drawer class="user-drawer no-select" v-model:visible="drawer.user" title="登录账户" :width="320" placement="right">
-    <p>登录账户</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-  </a-drawer>
 </template>
 
 <script>
@@ -52,12 +48,16 @@ export default {
     }
   },
   data: () => ({
-    drawer: {
-      setting: false,
-      user: false
+    login: false,
+    loading: false,
+    user: {
+      admin: false,
+      mfa: false,
+      name: '',
+      nickname: '登录中',
     }
   }),
-  emits: ["switchBlur", "switchInside", "openSetting"],
+  emits: ["switchBlur", "switchInside", "openDrawer"],
   methods: {
     switchBlur() {
       if (this.blur) {
@@ -76,14 +76,25 @@ export default {
         });
       }
     },
-    switchInside() {
-      this.$emit("switchInside", {});
+    openEmit(active) {
+      this.$emit('openDrawer', active);
     },
-    openDrawer(type) {
-      this.drawer[type] = true;
+    switchLogin(state) {
+      this.login = state;
+      if (state) this.getInfo();
     },
-    openSetting() {
-      this.$emit("openSetting", {});
+    getInfo() {
+      this.loading = true;
+      this.$api.user.getMyInfo().then(res => setTimeout(() => {
+        this.loading = false;
+        if (res.state) {
+          res.data.mfa = res.data.mfa === 'true';
+          this.user = res.data;
+        }
+      }, 500)).catch(() => {
+        this.loading = false;
+        this.$message.warn('网络异常, 无法连接到服务器');
+      })
     }
   }
 }
@@ -104,7 +115,7 @@ export default {
 }
 </style>
 <style>
-.user-drawer .ant-drawer-header{
+.user-drawer .ant-drawer-header {
   padding: 15px;
 }
 </style>

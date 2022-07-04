@@ -20,13 +20,13 @@ public interface UserData {
     @Delete("DELETE FROM `user` WHERE  `id` = #{id}")
     int delete(int id);
 
-    @Select("SELECT `name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `group` WHERE `id` = #{id}")
+    @Select("SELECT `name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `user` WHERE `id` = #{id}")
     User getItem(int id);
 
-    @Select("SELECT `id`,`name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `group` WHERE `name` = #{name} AND `password` = #{password}")
+    @Select("SELECT `id`,`name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `user` WHERE `name` = #{name} AND `password` = #{password}")
     User getPrivacyItem(String name,String password);
 
-    @Select("SELECT `id`,`name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `group`")
+    @Select("SELECT `id`,`name`,`nickname`,`admin`,`mfa`,`add_time`,`last_login` FROM `user`")
     List<User> getList();
 
 }

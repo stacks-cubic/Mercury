@@ -36,6 +36,8 @@
         <java.version>17</java.version>
         <fastjson.version>2.0.8</fastjson.version>
         <codec.version>1.15</codec.version>
+        <caffeine.version>3.1.1</caffeine.version>
+        <yauaa.version>7.3.0</yauaa.version>
     </properties>
 
     <dependencies>
@@ -74,6 +76,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite.version}</version>
@@ -101,6 +109,12 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${codec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.basjes.parse.useragent</groupId>
+            <artifactId>yauaa</artifactId>
+            <version>${yauaa.version}</version>
         </dependency>
 
         <dependency>

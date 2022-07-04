@@ -125,7 +125,7 @@ export default {
                 this.reboot = false;
               }, 3000);
             }else{
-              this.$message.success(res.message ? res.message:'重启失败');
+              this.$message.warn(res.message ? res.message:'重启失败');
               this.reboot = false;
             }
           }).catch(() => {

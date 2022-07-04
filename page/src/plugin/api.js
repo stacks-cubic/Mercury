@@ -1,14 +1,5 @@
 import request from './request'
-import parser from 'ua-parser-js'
 import md5 from 'js-md5'
-
-// 设备工具
-const device = {
-    get: function () {
-        let info = parser(navigator.userAgent);
-        return "[网页端|" + info.engine.name + "] " + info.browser.name + " / " + this.uuid() + " ( " + info.os.name + " " + info.os.version + " )";
-    }
-}
 
 // 初始化接口
 const system = {
@@ -69,9 +60,30 @@ const setting = {
     }
 }
 
+// 用户接口
+const user = {
+    login: form => {
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('password', md5(form.password))
+        if (form.code) data.append('code', form.code)
+        return request({
+            url: '/user/auth/login',
+            method: 'POST',
+            data
+        })
+    },
+    getMyInfo: () => {
+        return request({
+            url: '/user/my/info',
+            method: 'GET'
+        })
+    }
+}
+
 export default {
     host: process.env.VUE_APP_BASE_URL,
-    device,
     system,
-    setting
+    setting,
+    user
 }

@@ -3,8 +3,8 @@
     <div class="blur" :class="{show:blur}"></div>
     <div class="background" :style="{backgroundImage: 'url(\''+bg+'\')'}"></div>
     <div class="container no-select">
-      <page-header :blur="blur" :inside="inside" @switchBlur="switchBlur" @switchInside="switchInside"
-                   @openSetting="openSetting"/>
+      <page-header ref="header" :blur="blur" :inside="inside" @switchBlur="switchBlur" @switchInside="switchInside"
+                   @openDrawer="openDrawer"/>
       <div class="box">
         <div class="title" :style="{color: info.color}">{{ info.name }}</div>
         <search/>
@@ -34,6 +34,7 @@
       <page-foot :info="info"/>
     </div>
     <setting-drawer ref="setting"/>
+    <user-drawer ref="user" @switchLogin="switchLogin"/>
   </div>
 </template>
 
@@ -46,10 +47,12 @@ import PageFoot from "@/components/page-foot";
 import Search from "@/components/search";
 import ToolGroup from "@/components/tool-group";
 import SettingDrawer from "@/components/setting/setting-drawer";
+import UserDrawer from "@/components/user-drawer";
 
 export default {
   name: 'Home',
   components: {
+    UserDrawer,
     SettingDrawer,
     ToolGroup,
     Search,
@@ -60,8 +63,9 @@ export default {
     MarkItem
   },
   data: () => ({
-    inside: false,
     blur: false,
+    login: false,
+    inside: false,
     type: 1,
     info: {
       name: 'Mercury',
@@ -112,6 +116,9 @@ export default {
       }
       let blur = localStorage.getItem('app:blur') === 'true';
       if (blur) this.blur = blur;
+
+      this.login = Boolean(localStorage.getItem('app:token'));
+      this.switchLogin(this.login);
     },
     switchBlur(state) {
       this.blur = state;
@@ -119,8 +126,12 @@ export default {
     switchInside() {
       this.inside = !this.inside;
     },
-    openSetting() {
-      this.$refs.setting.open();
+    openDrawer(action) {
+      if (action === 'user') this.$refs.user.open();
+      else this.$refs.setting.open();
+    },
+    switchLogin(state) {
+      this.$refs.header.switchLogin(state);
     }
   },
   mounted() {
