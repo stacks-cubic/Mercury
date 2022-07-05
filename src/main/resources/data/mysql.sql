@@ -59,7 +59,7 @@ CREATE TABLE "mark"
     "superior" int,
     "service"  tinyint(1) NOT NULL DEFAULT 0,
     "era"      varchar(64),
-    "ira"      varchar(64) NOT NULL,
+    "ira"      varchar(64),
     "hide"     int         NOT NULL DEFAULT 3,
     "date"     varchar(15) NOT NULL,
     PRIMARY KEY ("id")

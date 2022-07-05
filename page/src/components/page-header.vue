@@ -93,7 +93,6 @@ export default {
         }
       }, 500)).catch(() => {
         this.loading = false;
-        this.$message.warn('网络异常, 无法连接到服务器');
       })
     }
   }

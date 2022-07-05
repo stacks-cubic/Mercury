@@ -72,9 +72,9 @@ public class GroupService {
      * @param hide 隐藏条件
      * @return 添加状态
      */
-    public boolean add(int uid, String name, boolean fold, int hide) {
+    public boolean add(int uid, String name, boolean fold, int hide, int weight) {
         try {
-            return groupData.add(uid, name, fold, hide, System.currentTimeMillis()) == 1;
+            return groupData.add(uid, name, fold, hide, weight,System.currentTimeMillis()) == 1;
         } catch (Exception e) {
             return false;
         }
@@ -91,11 +91,11 @@ public class GroupService {
      * @param admin 是否为管理员
      * @return 修改状态
      */
-    public boolean update(int gid, String name, boolean fold, int hide, int uid, boolean admin) {
+    public boolean update(int gid, String name, boolean fold, int hide, int weight, int uid, boolean admin) {
         try {
             // 判断是否允许修改
             if (getItem(gid, uid, admin) == null) return false;
-            return groupData.update(gid, name, fold, hide, System.currentTimeMillis()) == 1;
+            return groupData.update(gid, name, fold, hide,weight, System.currentTimeMillis()) == 1;
         } catch (Exception e) {
             return false;
         }

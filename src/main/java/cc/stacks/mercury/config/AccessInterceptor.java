@@ -57,17 +57,17 @@ public class AccessInterceptor implements HandlerInterceptor {
 //            else return true;
 //            return false;
 //        } else {
-            // 访问权限校验
-            String checkAccessError = checkAccess(method.getAnnotation(Access.class), request);
-            if (checkAccessError != null) {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application/json; charset=utf-8");
-                try (PrintWriter writer = response.getWriter()) {
-                    writer.print("{\"state\":false,\"message\":\"" + checkAccessError + "\",\"code\":" + 1000001 + ",\"time\":\"" + System.currentTimeMillis() + "\"}");
-                } catch (Exception ignored) {
-                }
-                return false;
+        // 访问权限校验
+        String checkAccessError = checkAccess(method.getAnnotation(Access.class), request);
+        if (checkAccessError != null) {
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=utf-8");
+            try (PrintWriter writer = response.getWriter()) {
+                writer.print("{\"state\":false,\"message\":\"" + checkAccessError + "\",\"code\":" + 1000001 + ",\"time\":\"" + System.currentTimeMillis() + "\"}");
+            } catch (Exception ignored) {
             }
+            return false;
+        }
 //        }
         return true;
     }
@@ -100,9 +100,11 @@ public class AccessInterceptor implements HandlerInterceptor {
                 token = tokenData.getItem(auth);
                 caffe.put(tag, JSON.toJSONString(token));
             } else token = JSON.parseObject(String.valueOf(cache), Token.class);
+            if (TextUtil.isNull(token)) return "登录失效";
             // 校验令牌是否有效
             String checkMsg = check(auth, request.getHeader("User-Agent"), token);
             if (checkMsg != null) return checkMsg;
+            if (token.getAdmin() == null) token.setAdmin(false);
             // 校验管理权限
             if (access.admin() && !token.getAdmin()) return "权限不足";
             // 将用户编号写入请求

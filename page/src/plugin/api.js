@@ -81,9 +81,105 @@ const user = {
     }
 }
 
+const mark = {
+    getGroupList: () => {
+        return request({
+            url: '/mark/group/list',
+            method: 'GET'
+        })
+    },
+    getGroupInfo: gid => {
+        return request({
+            url: '/mark/group/' + gid,
+            method: 'GET'
+        })
+    },
+    addGroup: form => {
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('fold', form.fold)
+        data.append('hide', form.hide)
+        data.append('weight', form.weight)
+        return request({
+            url: '/mark/group/add',
+            method: 'POST',
+            data
+        })
+    },
+    updateGroup: (gid, form) => {
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('fold', form.fold)
+        data.append('hide', form.hide)
+        data.append('weight', form.weight)
+        return request({
+            url: '/mark/group/' + gid,
+            method: 'POST',
+            data
+        })
+    },
+    removeGroup: gid => {
+        return request({
+            url: '/mark/group/' + gid,
+            method: 'DELETE'
+        })
+    },
+    getList: service => {
+        return request({
+            url: '/mark/list' + (service ? '?service=true' : ''),
+            method: 'GET'
+        })
+    },
+    getInfo: mid => {
+        return request({
+            url: '/mark/' + mid,
+            method: 'GET'
+        })
+    },
+    add: form => {
+        let data = new URLSearchParams();
+        data.append('gid', form.gid)
+        data.append('title', form.title)
+        data.append('icon', form.icon)
+        data.append('describe', form.describe)
+        data.append('weight', form.weight)
+        data.append('service', form.service)
+        data.append('era', form.era)
+        data.append('ira', form.ira)
+        data.append('hide', form.hide)
+        return request({
+            url: '/mark/add',
+            method: 'POST',
+            data
+        })
+    },
+    update: (mid, form) => {
+        let data = new URLSearchParams();
+        data.append('gid', form.gid)
+        data.append('title', form.title)
+        data.append('describe', form.describe)
+        data.append('weight', form.weight)
+        data.append('era', form.era)
+        data.append('ira', form.ira)
+        data.append('hide', form.hide)
+        return request({
+            url: '/mark/' + mid,
+            method: 'POST',
+            data
+        })
+    },
+    remove: mid => {
+        return request({
+            url: '/mark/' + mid,
+            method: 'DELETE'
+        })
+    }
+}
+
 export default {
     host: process.env.VUE_APP_BASE_URL,
     system,
     setting,
-    user
+    user,
+    mark
 }

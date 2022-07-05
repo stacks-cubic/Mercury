@@ -130,7 +130,6 @@ export default {
             }
           }).catch(() => {
             this.reboot = false;
-            this.$message.warn('网络异常, 无法连接到服务器');
           })
         }
       });
