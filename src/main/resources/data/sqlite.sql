@@ -56,7 +56,7 @@ CREATE TABLE "mark"
     "superior" INTEGER(5),
     "service"  INTEGER(1) NOT NULL DEFAULT 0,
     "era"      TEXT(64),
-    "ira"      TEXT(64) NOT NULL,
+    "ira"      TEXT(64),
     "hide"     INTEGER(1) NOT NULL DEFAULT 3,
     "date"     TEXT(15) NOT NULL
 );
