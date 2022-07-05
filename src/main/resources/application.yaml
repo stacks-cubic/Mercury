@@ -25,6 +25,9 @@ spring:
       static-locations:
         - file:./page
         - classpath:/static
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
 mercury:
   init: false
   name: Mercury

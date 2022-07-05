@@ -11,6 +11,7 @@ public class Mark {
     private Integer id;
     // 分组编号
     private Integer gid;
+    private String group;
     // 用户编号
     private Integer uid;
     // 服务标识编号

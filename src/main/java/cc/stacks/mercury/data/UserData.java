@@ -14,8 +14,11 @@ public interface UserData {
     @Insert("INSERT INTO `user` (`name`,`nickname`,`password`,`admin`,`mfa`,`add_time`) VALUES (#{name},#{nickname},#{password},#{admin},#{mfa},#{addTime})")
     int add(String name,String nickname,String password,boolean admin,String mfa,long addTime);
 
-    @Update("UPDATE `user` SET `name` = #{name},`nickname` = #{nickname},${password}`admin` = #{admin} WHERE `id` = #{id}")
-    int update(int id,String name,String nickname,String password,boolean admin);
+    @Update("UPDATE `user` SET `name` = #{name},`nickname` = #{nickname},${password}${mfa}`admin` = #{admin} WHERE `id` = #{id}")
+    int update(int id,String name,String nickname,String password,String mfa,boolean admin);
+
+    @Update("UPDATE `user` SET `last_login` = #{date} WHERE `id` = #{id}")
+    int updateLogin(int id,long date);
 
     @Delete("DELETE FROM `user` WHERE  `id` = #{id}")
     int delete(int id);
