@@ -5,8 +5,8 @@
               :title="mode === 'add' ? '新增' : '编辑'" placement="right">
       <template #extra>
         <div class="drawer-btn">
-          <a-button type="primary" :disabled="loading || update" v-if="mode === 'edit'" @click="remove" class="mr-5"
-                    danger>删除
+          <a-button type="primary" :disabled="loading || update" v-if="mode === 'edit'"
+                    @click="remove" class="mr-5" danger>删除
           </a-button>
           <a-button type="primary" :disabled="loading" :loading="update" @click="save">保存</a-button>
         </div>
@@ -65,7 +65,11 @@
               <a-input v-model:value="form[3].title"/>
             </a-form-item>
             <a-form-item label="分组">
-              <a-input v-model:value="form[3].gid"/>
+              <a-select v-model:value="form[3].gid" placeholder="请选择分组" style="width: 180px">
+                <a-select-option v-for="(item,i) in group" :key="'service_group_'+i" :value="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item label="排序权重">
               <a-input v-model:value="form[3].weight"/>
@@ -74,10 +78,10 @@
               <a-input v-model:value="form[3].describe"/>
             </a-form-item>
             <a-form-item label="外网地址">
-              <a-input v-model:value="form[3].era"/>
+              <a-textarea :autosize="autosize" v-model:value="form[3].era"/>
             </a-form-item>
             <a-form-item label="内网地址">
-              <a-input v-model:value="form[3].ira"/>
+              <a-textarea :autosize="autosize" v-model:value="form[3].ira"/>
             </a-form-item>
             <a-form-item label="隐藏">
               <a-select v-model:value="form[3].hide" style="width: 130px">
@@ -100,7 +104,11 @@
               <a-input v-model:value="form[4].title"/>
             </a-form-item>
             <a-form-item label="分组">
-              <a-input v-model:value="form[4].gid"/>
+              <a-select v-model:value="form[4].gid" placeholder="请选择分组" style="width: 200px">
+                <a-select-option v-for="(item,i) in group" :key="'mark_group_'+i" :value="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item label="排序权重">
               <a-input v-model:value="form[4].weight"/>
@@ -109,7 +117,7 @@
               <a-input v-model:value="form[4].describe"/>
             </a-form-item>
             <a-form-item label="地址">
-              <a-input v-model:value="form[4].era"/>
+              <a-textarea :autosize="autosize" v-model:value="form[4].era"/>
             </a-form-item>
             <a-form-item label="隐藏">
               <a-select v-model:value="form[4].hide" style="width: 130px">
@@ -180,7 +188,9 @@ export default {
     label: {
       style: {width: '75px'}
     },
-    form: []
+    form: [],
+    group: [],
+    autosize:{ minRows: 3, maxRows: 6 }
   }),
   emits: ["update"],
   methods: {
@@ -193,6 +203,7 @@ export default {
       setTimeout(() => {
         this.visible = true;
         if (this.mode === 'edit') this.loadData();
+        else if (this.type === 4 || this.type === 5) this.loadData();
       }, 100);
     },
     close() {
@@ -222,7 +233,6 @@ export default {
           service: true,
           icon: '',
           title: '',
-          gid: 0,
           weight: 0,
           describe: '',
           era: '',
@@ -233,7 +243,6 @@ export default {
           service: false,
           icon: '',
           title: '',
-          gid: 0,
           weight: 0,
           describe: '',
           era: '',
@@ -267,10 +276,17 @@ export default {
           return data;
         })).catch(() => this.exit())
       } else if (this.type === 4 || this.type === 5) {
-        this.$api.mark.getInfo(this.id).then(res => this.completeLoad(res, data => {
-          data.hide = '' + data.hide;
-          return data;
-        })).catch(() => this.exit())
+        this.$api.mark.getGroupList().then(res => {
+          if (res.state) this.group = res.data;
+          if (!this.id) {
+            this.loading = false;
+            return;
+          }
+          this.$api.mark.getInfo(this.id).then(r => this.completeLoad(r, data => {
+            data.hide = '' + data.hide;
+            return data;
+          })).catch(() => this.exit())
+        }).catch(() => this.exit())
       } else {
         setTimeout(() => {
           this.loading = false;

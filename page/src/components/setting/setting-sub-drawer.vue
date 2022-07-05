@@ -130,7 +130,7 @@
                   <strong>{{item.title}}</strong>
                 </div>
                 <div class="text-small text-gray line1" v-if="item.describe">{{item.describe}}</div>
-                <div class="text-small text-gray mt-5">分组: 分组1</div>
+                <div class="text-small text-gray mt-5">分组: {{item.group}}</div>
                 <div class="text-small text-gray line1" v-if="item.era">外网: {{item.era}}</div>
                 <div class="text-small text-gray line1" v-if="item.ira">内网: {{item.ira}}</div>
                 <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
@@ -149,7 +149,7 @@
                   <strong>{{item.title}}</strong>
                 </div>
                 <div class="text-small text-gray line1">{{item.era}}</div>
-                <div class="text-small text-gray mt-5">分组: 分组1</div>
+                <div class="text-small text-gray mt-5">分组: {{item.group}}</div>
                 <div class="text-small text-gray line1" v-if="item.describe">描述: {{item.describe}}</div>
                 <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
               </div>
