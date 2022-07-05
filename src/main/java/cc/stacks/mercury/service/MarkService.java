@@ -1,8 +1,11 @@
 package cc.stacks.mercury.service;
 
+import cc.stacks.mercury.data.GroupData;
 import cc.stacks.mercury.data.MarkData;
+import cc.stacks.mercury.model.Group;
 import cc.stacks.mercury.model.Mark;
 import cc.stacks.mercury.util.TextUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,9 +16,11 @@ import java.util.Objects;
 public class MarkService {
 
     private final MarkData markData;
+    private final GroupData groupData;
 
-    public MarkService(MarkData markData) {
+    public MarkService(MarkData markData, GroupData groupData) {
         this.markData = markData;
+        this.groupData = groupData;
     }
 
     /**
@@ -38,8 +43,18 @@ public class MarkService {
             else if (manage) sql += "AND `uid` = #{uid}";
                 // 获取用户书签
             else sql += "AND (`uid` = #{uid} AND `hide` = 4) OR `hide` IN(0,3)";
-            // 查询列表
-            return markData.getList(sql);
+            // 查询书签列表
+            List<Mark> marks = markData.getList(sql);
+            List<Group> groups = groupData.getList("");
+            for (Mark mark:marks){
+                for (Group group:groups){
+                    if (Objects.equals(mark.getGid(), group.getId())){
+                        mark.setGroup(group.getName());
+                        break;
+                    }
+                }
+            }
+            return marks;
         } catch (Exception e) {
             return new ArrayList<>();
         }
