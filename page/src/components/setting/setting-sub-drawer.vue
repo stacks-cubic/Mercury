@@ -127,12 +127,12 @@
                  :key="'service_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div>
-                  <strong>{{item.title}}</strong>
+                  <strong>{{ item.title }}</strong>
                 </div>
-                <div class="text-small text-gray line1" v-if="item.describe">{{item.describe}}</div>
-                <div class="text-small text-gray mt-5">分组: {{item.group}}</div>
-                <div class="text-small text-gray line1" v-if="item.era">外网: {{item.era}}</div>
-                <div class="text-small text-gray line1" v-if="item.ira">内网: {{item.ira}}</div>
+                <div class="text-small text-gray line1" v-if="item.describe">{{ item.describe }}</div>
+                <div class="text-small text-gray mt-5">分组: {{ item.group }}</div>
+                <div class="text-small text-gray line1" v-if="item.era">外网: {{ item.era }}</div>
+                <div class="text-small text-gray line1" v-if="item.ira">内网: {{ item.ira }}</div>
                 <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
               </div>
               <right-outlined/>
@@ -146,11 +146,11 @@
                  :key="'mark_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div>
-                  <strong>{{item.title}}</strong>
+                  <strong>{{ item.title }}</strong>
                 </div>
-                <div class="text-small text-gray line1">{{item.era}}</div>
-                <div class="text-small text-gray mt-5">分组: {{item.group}}</div>
-                <div class="text-small text-gray line1" v-if="item.describe">描述: {{item.describe}}</div>
+                <div class="text-small text-gray line1">{{ item.era }}</div>
+                <div class="text-small text-gray mt-5">分组: {{ item.group }}</div>
+                <div class="text-small text-gray line1" v-if="item.describe">描述: {{ item.describe }}</div>
                 <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
               </div>
               <right-outlined/>
@@ -160,14 +160,19 @@
         </template>
         <template v-else-if="sub.id === 6">
           <div class="list">
-            <div class="form-item flex align-center justify-between pa-10 border-bottom" @click="openForm('edit')">
+            <div class="form-item flex align-center justify-between pa-10 border-bottom" v-for="(item,i) in form[5]"
+                 :key="'user_'+i" @click="openForm('edit',item.id)">
               <div>
-                <div>
-                  <strong class="mr-5">Skay</strong>
-                  <a-tag color="#999" class="tag mr-5">@skay</a-tag>
-                  <a-tag color="#108ee9" class="tag">管理员</a-tag>
+                <div class="flex align-center">
+                  <strong class="mr-5">{{ item.nickname }}</strong>
+                  <div class="text-small text-gray">@{{ item.name }}</div>
                 </div>
-                <div class="text-small text-gray">3天前来过</div>
+                <div style="margin-top: -3px">
+                  <a-tag color="#999" class="tag mr-5">No.{{ item.id }}</a-tag>
+                  <a-tag color="#108ee9" class="tag mr-5" v-if="item.admin">管理员</a-tag>
+                  <a-tag color="#f50" class="tag" v-if="item.mfa">双因素</a-tag>
+                </div>
+                <div class="text-small text-gray">上次登录: {{ item.lastLogin }}</div>
               </div>
               <right-outlined/>
             </div>
@@ -210,6 +215,7 @@
 <script>
 import SettingFormDrawer from "@/components/setting/setting-form-drawer";
 import {RightOutlined} from '@ant-design/icons-vue';
+import {date} from '@/plugin/util';
 
 export default {
   name: "setting-sub-drawer",
@@ -273,13 +279,7 @@ export default {
         [],
         [],
         [],
-        {
-          name: '',
-          nickname: '',
-          password: '',
-          admin: false,
-          mfa: ''
-        },
+        [],
         {
           pierce: false,
           service: 'zerotier',
@@ -314,6 +314,14 @@ export default {
         this.$api.mark.getGroupList().then(res => this.completeLoad(res)).catch(() => this.exit())
       else if (this.sub.id === 4 || this.sub.id === 5)
         this.$api.mark.getList(this.sub.id === 4).then(res => this.completeLoad(res)).catch(() => this.exit())
+      else if (this.sub.id === 6)
+        this.$api.user.getList().then(res => this.completeLoad(res, data => {
+          for (let i in data) {
+            data[i].lastLogin = date.distance(data[i].lastLogin);
+            data[i].mfa = data[i].mfa === 'true';
+          }
+          return data;
+        })).catch(() => this.exit())
       else {
         setTimeout(() => {
           this.loading = false;

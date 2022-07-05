@@ -78,7 +78,40 @@ const user = {
             url: '/user/my/info',
             method: 'GET'
         })
-    }
+    },
+    getList: () => {
+        return request({
+            url: '/user/list',
+            method: 'GET'
+        })
+    },
+    getInfo: uid => {
+        return request({
+            url: '/user/' + uid,
+            method: 'GET'
+        })
+    },
+    getMFAKey: () => {
+        return request({
+            url: '/user/mfa',
+            method: 'GET'
+        })
+    },
+    update: (uid, form) => {
+        let data = new URLSearchParams();
+        data.append('name', form.name)
+        data.append('nickname', form.nickname)
+        if(form.password) data.append('password', form.password)
+        data.append('admin', form.admin)
+        data.append('mfa', form.mfa)
+        if(form.mfaKey) data.append('mfaKey', form.mfaKey)
+        if(form.mfaCode) data.append('mfaCode', form.mfaCode)
+        return request({
+            url: '/user/' + uid,
+            method: 'POST',
+            data
+        })
+    },
 }
 
 const mark = {

@@ -37,7 +37,7 @@
         <template v-else-if="type === 3">
           <a-form :label-col="label" class="border-bottom pa-10">
             <a-form-item label="名称">
-              <a-input v-model:value="form[2].name" :disabled="update"/>
+              <a-input v-model:value="form[2].name" :disabled="update" placeholder="请输入分组名称"/>
             </a-form-item>
             <a-form-item label="排序权重">
               <a-input v-model:value="form[2].weight" :disabled="update"/>
@@ -62,7 +62,7 @@
               <a-input v-model:value="form[3].icon"/>
             </a-form-item>
             <a-form-item label="名称">
-              <a-input v-model:value="form[3].title"/>
+              <a-input v-model:value="form[3].title" placeholder="请输入服务名称"/>
             </a-form-item>
             <a-form-item label="分组">
               <a-select v-model:value="form[3].gid" placeholder="请选择分组" style="width: 180px">
@@ -75,13 +75,13 @@
               <a-input v-model:value="form[3].weight"/>
             </a-form-item>
             <a-form-item label="描述信息">
-              <a-input v-model:value="form[3].describe"/>
+              <a-textarea :autosize="autosize" v-model:value="form[3].describe" placeholder="请输入服务描述"/>
             </a-form-item>
             <a-form-item label="外网地址">
-              <a-textarea :autosize="autosize" v-model:value="form[3].era"/>
+              <a-textarea :autosize="autosize" v-model:value="form[3].era" placeholder="请输入外网地址"/>
             </a-form-item>
             <a-form-item label="内网地址">
-              <a-textarea :autosize="autosize" v-model:value="form[3].ira"/>
+              <a-textarea :autosize="autosize" v-model:value="form[3].ira" placeholder="请输入内网地址"/>
             </a-form-item>
             <a-form-item label="隐藏">
               <a-select v-model:value="form[3].hide" style="width: 130px">
@@ -101,7 +101,7 @@
               <a-input v-model:value="form[4].icon"/>
             </a-form-item>
             <a-form-item label="名称">
-              <a-input v-model:value="form[4].title"/>
+              <a-input v-model:value="form[4].title" placeholder="请输入书签名称"/>
             </a-form-item>
             <a-form-item label="分组">
               <a-select v-model:value="form[4].gid" placeholder="请选择分组" style="width: 200px">
@@ -114,10 +114,10 @@
               <a-input v-model:value="form[4].weight"/>
             </a-form-item>
             <a-form-item label="描述信息">
-              <a-input v-model:value="form[4].describe"/>
+              <a-textarea :autosize="autosize" v-model:value="form[4].describe" placeholder="请输入服务描述"/>
             </a-form-item>
             <a-form-item label="地址">
-              <a-textarea :autosize="autosize" v-model:value="form[4].era"/>
+              <a-textarea :autosize="autosize" v-model:value="form[4].era" placeholder="请输入链接地址"/>
             </a-form-item>
             <a-form-item label="隐藏">
               <a-select v-model:value="form[4].hide" style="width: 130px">
@@ -134,19 +134,31 @@
         <template v-else-if="type === 6">
           <a-form :label-col="label" class="border-bottom pa-10">
             <a-form-item label="用户名">
-              <a-input v-model:value="form[5].name"/>
+              <a-input v-model:value="form[5].name" placeholder="请输入用户名"/>
             </a-form-item>
             <a-form-item label="昵称">
-              <a-input v-model:value="form[5].nickname"/>
+              <a-input v-model:value="form[5].nickname" placeholder="请输入昵称"/>
             </a-form-item>
             <a-form-item label="登录密码">
-              <a-input v-model:value="form[5].password"/>
+              <a-input v-model:value="form[5].password" :placeholder="mode==='edit' ? '留空保持密码不变':'请输入登录密码'"/>
+            </a-form-item>
+            <a-form-item label="安全令牌">
+              <a-switch v-model:checked="form[5].mfa" @change="changeMFA"/>
+              <div v-if="form[5].mfa && form[5].mfaKey" class="pt-10">
+                <div class="flex align-center">
+                  <vue-qr :text="'otpauth://totp/Mercury(@'+form[5].name+')?secret='+form[5].mfaKey"
+                          backgroundColor="#f4f4f4" :size="80" :margin="5"></vue-qr>
+                  <div class="ml-5 text-gray text-small">
+                    <div>请使用</div>
+                    <div>Google Authenticator</div>
+                    <div>扫描此二维码</div>
+                  </div>
+                </div>
+                <a-input v-model:value="form[5].mfaCode" placeholder="请输入6位纯数字验证码" class="mt-10"/>
+              </div>
             </a-form-item>
             <a-form-item label="管理员">
               <a-switch v-model:checked="form[5].admin"/>
-            </a-form-item>
-            <a-form-item label="安全令牌">
-              <a-switch v-model:checked="form[5].mfa"/>
             </a-form-item>
           </a-form>
         </template>
@@ -175,8 +187,11 @@
 </template>
 
 <script>
+import vueQr from 'vue-qr/src/packages/vue-qr.vue'
+
 export default {
   name: "setting-form-drawer",
+  components: {vueQr},
   data: () => ({
     id: 0,
     type: 0,
@@ -188,9 +203,10 @@ export default {
     label: {
       style: {width: '75px'}
     },
+    old: {},
     form: [],
     group: [],
-    autosize:{ minRows: 3, maxRows: 6 }
+    autosize: {minRows: 3, maxRows: 6}
   }),
   emits: ["update"],
   methods: {
@@ -212,6 +228,7 @@ export default {
       }, 350);
     },
     clean() {
+      this.old = {};
       this.form = [
         {},
         {
@@ -253,7 +270,9 @@ export default {
           nickname: '',
           password: '',
           admin: false,
-          mfa: ''
+          mfa: false,
+          mfaKey: '',
+          mfaCode: ''
         },
         {
           title: '',
@@ -287,6 +306,11 @@ export default {
             return data;
           })).catch(() => this.exit())
         }).catch(() => this.exit())
+      } else if (this.type === 6) {
+        this.$api.user.getInfo(this.id).then(res => this.completeLoad(res, data => {
+          data.mfa = data.mfa === 'true';
+          return data;
+        })).catch(() => this.exit())
       } else {
         setTimeout(() => {
           this.loading = false;
@@ -304,6 +328,10 @@ export default {
         this.update = true;
         if (this.mode === 'add') this.$api.mark.add(form).then(res => this.complete(res, '保存', true)).catch(() => this.error())
         else this.$api.mark.update(id, form).then(res => this.complete(res, '保存', false)).catch(() => this.error())
+      } else if (this.type === 6) {
+        this.update = true;
+        if (this.mode === 'add') this.$api.user.add(form).then(res => this.complete(res, '保存', true)).catch(() => this.error())
+        else this.$api.user.update(id, form).then(res => this.complete(res, '保存', false)).catch(() => this.error())
       }
     },
     remove() {
@@ -321,12 +349,25 @@ export default {
         },
       })
     },
+    changeMFA(state) {
+      if (state && (!this.form[5].mfaKey || this.mode === 'add')) {
+        if (this.old.mfa) return;
+        this.$api.user.getMFAKey().then(res => {
+          if (res.state) {
+            this.form[5].mfaKey = res.message;
+            if (this.mode === 'add') this.old.mfa = res.message;
+          }
+        });
+      }
+    },
     completeLoad(res, cleanData) {
       setTimeout(() => {
         if (res.state) {
           this.loading = false;
-          res.data = cleanData(res.data);
+          if (cleanData !== undefined)
+            res.data = cleanData(res.data);
           this.form[this.type - 1] = res.data;
+          this.old = JSON.parse(JSON.stringify(res.data));
         } else {
           this.exit();
           this.$message.warn(res.message ? res.message : '加载失败');
@@ -364,6 +405,14 @@ export default {
 
 .setting-form-drawer .ant-form-item {
   margin-bottom: 10px;
+}
+
+.qrCode {
+  background-color: #f4f4f4;
+  margin: 10px 0;
+  height: 110px;
+  padding: 5px;
+  width: 110px;
 }
 </style>
 <style>
