@@ -100,7 +100,7 @@ public class AccessInterceptor implements HandlerInterceptor {
                 token = tokenData.getItem(auth);
                 caffe.put(tag, JSON.toJSONString(token));
             } else token = JSON.parseObject(String.valueOf(cache), Token.class);
-            if (TextUtil.isNull(token)) return "登录失效";
+            if (TextUtil.isNull(token) || TextUtil.isNull(token.getCode())) return "登录失效";
             // 校验令牌是否有效
             String checkMsg = check(auth, request.getHeader("User-Agent"), token);
             if (checkMsg != null) return checkMsg;

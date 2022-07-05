@@ -2,6 +2,7 @@ package cc.stacks.mercury.service;
 
 import cc.stacks.mercury.data.TokenData;
 import cc.stacks.mercury.data.UserData;
+import cc.stacks.mercury.model.Token;
 import cc.stacks.mercury.model.User;
 import cc.stacks.mercury.util.SecurityUtil;
 import cc.stacks.mercury.util.TOTPUtil;
@@ -13,6 +14,7 @@ import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,6 +64,7 @@ public class UserService {
             if (tokenData.add(token, user.getId(), !SecurityUtil.isLocalHost(ip), ip, platform, device, now, now + (60000 * 60 * 24 * 7)) == 1) {
                 caffe.put("token:" + token, JSON.toJSONString(tokenData.getItem(token)));
                 caffe.put("agent:" + SecurityUtil.digestMD5(agent), "{\"platform\":\"" + platform + "\",\"device\":\"" + device + "\"}");
+                userData.updateLogin(user.getId(), now);
                 return Transit.success(token);
             }
             return Transit.failure();
@@ -99,14 +102,31 @@ public class UserService {
      * @param name     用户名
      * @param nickname 昵称
      * @param password 密码
+     * @param mfa      是否启用双因素
+     * @param key      双因素代码
      * @param admin    是否为管理员
      * @return 修改状态
      */
-    public boolean update(int uid, String name, String nickname, String password, boolean admin) {
+    public boolean update(int uid, String name, String nickname, String password, boolean admin, boolean mfa, String key) {
         try {
+            User user = getItem(uid);
+            if (user == null) return false;
+            // 修改密码
             if (TextUtil.isNull(password)) password = "";
             else password = "`password` = \"" + SecurityUtil.digestMD5(password) + "\",";
-            return userData.update(uid, name, nickname, password, admin) == 1;
+            // 修改双因素验证码
+            String mfaSql = "";
+            if (mfa && !TextUtil.isNull(key)) mfaSql = "`mfa` = \"" + key + "\",";
+            else if (!mfa) mfaSql = "`mfa` = NULL,";
+            // 重置令牌
+            if (!TextUtil.isNull(password) || !TextUtil.isNull(mfaSql) || user.getAdmin() != admin){
+                List<Token> tokens = tokenData.getList(uid);
+                if(!tokens.isEmpty()) tokenData.deleteByUId(uid);
+                for (Token token:tokens){
+                    caffe.invalidate("token:" + token.getCode());
+                }
+            }
+            return userData.update(uid, name, nickname, password, mfaSql, admin) == 1;
         } catch (Exception e) {
             return false;
         }
@@ -159,7 +179,7 @@ public class UserService {
             }
             return list;
         } catch (Exception e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 

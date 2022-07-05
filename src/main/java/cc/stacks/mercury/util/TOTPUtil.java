@@ -23,8 +23,8 @@ public class TOTPUtil {
         return new Base32().encodeAsString(getRandomBytes());
     }
 
-    public static String getUrl(String phone, String code) {
-        return "otpauth://totp/" + UriUtils.encode("OPO云平台(" + TextUtil.mobileEncrypt(phone) + ")", "utf-8") + "?secret=" + code;
+    public static String getUrl(String name, String code) {
+        return "otpauth://totp/" + UriUtils.encode("Mercury(" + name + ")", "utf-8") + "?secret=" + code;
     }
 
     // 校验代码
