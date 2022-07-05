@@ -112,10 +112,10 @@
                  :key="'group_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div class="flex align-center">
-                  <strong class="mr-5">{{item.name}}</strong>
+                  <strong class="mr-5">{{ item.name }}</strong>
                   <a-tag color="#f50" class="tag" v-if="item.fold">折叠</a-tag>
                 </div>
-                <div class="text-small text-gray">{{buildHide(item.hide)}}</div>
+                <div class="text-small text-gray">{{ buildHide(item.hide) }}</div>
               </div>
               <right-outlined/>
             </div>
@@ -123,16 +123,17 @@
         </template>
         <template v-else-if="sub.id === 4">
           <div class="list">
-            <div class="form-item flex align-center justify-between pa-10 border-bottom" @click="openForm('edit')">
+            <div class="form-item flex align-center justify-between pa-10 border-bottom" v-for="(item,i) in form[3]"
+                 :key="'service_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div>
-                  <strong>服务1</strong>
+                  <strong>{{item.title}}</strong>
                 </div>
-                <div class="text-small text-gray line1">敏捷的狐狸跳过懒惰的乌龟</div>
+                <div class="text-small text-gray line1" v-if="item.describe">{{item.describe}}</div>
                 <div class="text-small text-gray mt-5">分组: 分组1</div>
-                <div class="text-small text-gray line1">外网: http://home.skay.ink/service1</div>
-                <div class="text-small text-gray line1">内网: http://192.168.1.12:49875</div>
-                <div class="text-small text-gray">隐藏: 对游客隐藏</div>
+                <div class="text-small text-gray line1" v-if="item.era">外网: {{item.era}}</div>
+                <div class="text-small text-gray line1" v-if="item.ira">内网: {{item.ira}}</div>
+                <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
               </div>
               <right-outlined/>
             </div>
@@ -141,15 +142,16 @@
         </template>
         <template v-else-if="sub.id === 5">
           <div class="list">
-            <div class="form-item flex align-center justify-between pa-10 border-bottom" @click="openForm('edit')">
+            <div class="form-item flex align-center justify-between pa-10 border-bottom" v-for="(item,i) in form[4]"
+                 :key="'mark_'+i" @click="openForm('edit',item.id)">
               <div>
                 <div>
-                  <strong>书签1</strong>
+                  <strong>{{item.title}}</strong>
                 </div>
-                <div class="text-small text-gray line1">http://home.skay.ink/mark1</div>
+                <div class="text-small text-gray line1">{{item.era}}</div>
                 <div class="text-small text-gray mt-5">分组: 分组1</div>
-                <div class="text-small text-gray line1">描述: 敏捷的狐狸跳过懒惰的乌龟</div>
-                <div class="text-small text-gray">隐藏: 对游客隐藏</div>
+                <div class="text-small text-gray line1" v-if="item.describe">描述: {{item.describe}}</div>
+                <div class="text-small text-gray">隐藏: {{ buildHide(item.hide) }}</div>
               </div>
               <right-outlined/>
             </div>
@@ -201,7 +203,7 @@
           </div>
         </template>
       </a-spin>
-      <setting-form-drawer ref="form" @update="loadData" />
+      <setting-form-drawer ref="form" @update="loadData"/>
     </a-drawer>
   </template>
 </template>
@@ -224,68 +226,7 @@ export default {
       id: 0,
       title: '',
     },
-    form: [
-      {
-        name: '',
-        dark: false,
-        color: '',
-        textSize: '',
-        switchImage: false,
-        autoImage: false,
-        image: '',
-        imageSource: '',
-        toolsStyle: '',
-        serviceStyle: '',
-        markStyle: '',
-        phrase: false,
-        phraseApi: ''
-      },
-      {
-        name: '',
-        defaultEngine: false,
-        queryUrl: '',
-        searchTips: false,
-        autoFill: false,
-        fillUrl: '',
-        searchHistory: false
-      },
-      [],
-      {
-        ssid: '',
-        title: '',
-        gid: 0,
-        weight: 0,
-        describe: '',
-        era: '',
-        ira: '',
-        hide: '0'
-      },
-      {
-        title: '',
-        gid: 0,
-        weight: 0,
-        describe: '',
-        era: '',
-        hide: '0'
-      },
-      {
-        name: '',
-        nickname: '',
-        password: '',
-        admin: false,
-        mfa: ''
-      },
-      {
-        pierce: false,
-        service: 'zerotier',
-        networkId: '',
-        title: '',
-        host: '',
-        port: 0,
-        source: '',
-        mode: false
-      }
-    ]
+    form: []
   }),
   methods: {
     open(id) {
@@ -293,58 +234,87 @@ export default {
         id,
         title: this.buildTitle(id)
       };
+      this.clean();
       this.show = true;
       setTimeout(() => {
         this.visible = true;
         this.loadData();
       }, 100);
     },
-    openForm(mode,id) {
-      this.$refs.form.open(this.sub.id, mode,id)
+    openForm(mode, id) {
+      this.$refs.form.open(this.sub.id, mode, id)
+    },
+    clean() {
+      this.form = [
+        {
+          name: '',
+          dark: false,
+          color: '',
+          textSize: '',
+          switchImage: false,
+          autoImage: false,
+          image: '',
+          imageSource: '',
+          toolsStyle: '',
+          serviceStyle: '',
+          markStyle: '',
+          phrase: false,
+          phraseApi: ''
+        },
+        {
+          name: '',
+          defaultEngine: false,
+          queryUrl: '',
+          searchTips: false,
+          autoFill: false,
+          fillUrl: '',
+          searchHistory: false
+        },
+        [],
+        [],
+        [],
+        {
+          name: '',
+          nickname: '',
+          password: '',
+          admin: false,
+          mfa: ''
+        },
+        {
+          pierce: false,
+          service: 'zerotier',
+          networkId: '',
+          title: '',
+          host: '',
+          port: 0,
+          source: '',
+          mode: false
+        }]
     },
     close() {
       setTimeout(() => {
         this.show = false;
       }, 350);
     },
+    exit() {
+      this.visible = false;
+      this.close();
+    },
     loadData() {
       this.loading = true;
       if (this.sub.id === 1) {
-        this.$api.system.init().then(res => setTimeout(() => {
-          if (res.state) {
-            res.data.dark = res.data.dark === 'true';
-            res.data.switchImage = res.data.switchImage === 'true';
-            res.data.autoImage = res.data.autoImage === 'true';
-            res.data.phrase = res.data.phrase === 'true';
-            this.form[this.sub.id - 1] = res.data;
-            this.loading = false;
-          } else {
-            this.showWarn(res.message ? res.message : '数据加载失败');
-            this.visible = false;
-            this.close();
-          }
-          localStorage.setItem('app:info', JSON.stringify(res.data))
-        }, 300)).catch(() => {
-          this.showWarn('网络异常, 无法连接到服务器');
-          this.visible = false;
-          this.close();
-        })
-      } else if (this.sub.id === 3) {
-        this.$api.mark.getGroupList().then(res => setTimeout(() => {
-          if (res.state) {
-            this.form[this.sub.id - 1] = res.data;
-            this.loading = false;
-          } else {
-            this.showWarn(res.message ? res.message : '数据加载失败');
-            this.visible = false;
-            this.close();
-          }
-        }, 300)).catch(() => {
-          this.showWarn('网络异常, 无法连接到服务器');
-          this.visible = false;
-          this.close();
-        })
-      } else {
+        this.$api.system.init().then(res => this.completeLoad(res, data => {
+          data.dark = data.dark === 'true';
+          data.switchImage = data.switchImage === 'true';
+          data.autoImage = data.autoImage === 'true';
+          data.phrase = data.phrase === 'true';
+          return data;
+        })).catch(() => this.exit())
+      } else if (this.sub.id === 3)
+        this.$api.mark.getGroupList().then(res => this.completeLoad(res)).catch(() => this.exit())
+      else if (this.sub.id === 4 || this.sub.id === 5)
+        this.$api.mark.getList(this.sub.id === 4).then(res => this.completeLoad(res)).catch(() => this.exit())
+      else {
         setTimeout(() => {
           this.loading = false;
         }, 500);
@@ -389,6 +359,19 @@ export default {
         this.update = false;
       })
     },
+    completeLoad(res, cleanData) {
+      setTimeout(() => {
+        if (res.state) {
+          this.loading = false;
+          if (cleanData !== undefined)
+            res.data = cleanData(res.data);
+          this.form[this.sub.id - 1] = res.data;
+        } else {
+          this.exit();
+          this.$message.warn(res.message ? res.message : '加载失败');
+        }
+      }, 500)
+    }
   }
 }
 </script>

@@ -5,7 +5,9 @@
               :title="mode === 'add' ? '新增' : '编辑'" placement="right">
       <template #extra>
         <div class="drawer-btn">
-          <a-button type="primary" :disabled="loading || update" v-if="mode === 'edit'" @click="remove" class="mr-5" danger>删除</a-button>
+          <a-button type="primary" :disabled="loading || update" v-if="mode === 'edit'" @click="remove" class="mr-5"
+                    danger>删除
+          </a-button>
           <a-button type="primary" :disabled="loading" :loading="update" @click="save">保存</a-button>
         </div>
       </template>
@@ -56,8 +58,8 @@
         </template>
         <template v-else-if="type === 4">
           <a-form :label-col="label" class="border-bottom pa-10">
-            <a-form-item label="匹配标识">
-              <a-input v-model:value="form[3].ssid"/>
+            <a-form-item label="图标">
+              <a-input v-model:value="form[3].icon"/>
             </a-form-item>
             <a-form-item label="名称">
               <a-input v-model:value="form[3].title"/>
@@ -78,7 +80,7 @@
               <a-input v-model:value="form[3].ira"/>
             </a-form-item>
             <a-form-item label="隐藏">
-              <a-select v-model:value="form[3].hide" style="width: 100px">
+              <a-select v-model:value="form[3].hide" style="width: 130px">
                 <a-select-option value="0">不隐藏</a-select-option>
                 <a-select-option value="1">隐藏</a-select-option>
                 <a-select-option value="2">对用户隐藏</a-select-option>
@@ -91,6 +93,9 @@
         </template>
         <template v-else-if="type === 5">
           <a-form :label-col="label" class="border-bottom pa-10">
+            <a-form-item label="图标">
+              <a-input v-model:value="form[4].icon"/>
+            </a-form-item>
             <a-form-item label="名称">
               <a-input v-model:value="form[4].title"/>
             </a-form-item>
@@ -107,7 +112,7 @@
               <a-input v-model:value="form[4].era"/>
             </a-form-item>
             <a-form-item label="隐藏">
-              <a-select v-model:value="form[4].hide" style="width: 100px">
+              <a-select v-model:value="form[4].hide" style="width: 130px">
                 <a-select-option value="0">不隐藏</a-select-option>
                 <a-select-option value="1">隐藏</a-select-option>
                 <a-select-option value="2">对用户隐藏</a-select-option>
@@ -214,7 +219,8 @@ export default {
           hide: '0'
         },
         {
-          ssid: '',
+          service: true,
+          icon: '',
           title: '',
           gid: 0,
           weight: 0,
@@ -224,6 +230,8 @@ export default {
           hide: '0'
         },
         {
+          service: false,
+          icon: '',
           title: '',
           gid: 0,
           weight: 0,
@@ -247,23 +255,22 @@ export default {
         }
       ]
     },
+    exit() {
+      this.visible = false;
+      this.close();
+    },
     loadData() {
       this.loading = true;
       if (this.type === 3) {
-        this.$api.mark.getGroupInfo(this.id).then(res => setTimeout(() => {
-          if (res.state) {
-            this.loading = false;
-            res.data.hide = '' + res.data.hide;
-            this.form[2] = res.data;
-          } else {
-            this.close();
-            this.visible = false;
-            this.$message.warn(res.message ? res.message : '加载失败');
-          }
-        }, 500)).catch(() => {
-          this.close();
-          this.visible = false;
-        })
+        this.$api.mark.getGroupInfo(this.id).then(res => this.completeLoad(res, data => {
+          data.hide = '' + data.hide;
+          return data;
+        })).catch(() => this.exit())
+      } else if (this.type === 4 || this.type === 5) {
+        this.$api.mark.getInfo(this.id).then(res => this.completeLoad(res, data => {
+          data.hide = '' + data.hide;
+          return data;
+        })).catch(() => this.exit())
       } else {
         setTimeout(() => {
           this.loading = false;
@@ -271,35 +278,19 @@ export default {
       }
     },
     save() {
+      let id = this.id;
+      let form = this.form[this.type - 1];
       if (this.type === 3) {
         this.update = true;
-        if (this.mode === 'add') {
-          this.$api.mark.addGroup(this.form[this.type - 1]).then(res => setTimeout(() => {
-            this.update = false;
-            if (res.state) {
-              this.$message.success('保存成功');
-              this.$emit("update", {});
-              this.visible = false;
-              this.close();
-            } else this.$message.warn(res.message ? res.message : '保存失败');
-          }, 500)).catch(() => {
-            this.update = false;
-          })
-        } else {
-          this.$api.mark.updateGroup(this.id, this.form[this.type - 1]).then(res => setTimeout(() => {
-            this.update = false;
-            if (res.state) {
-              this.$message.success('保存成功');
-              this.$emit("update", {});
-              this.loadData();
-            } else this.$message.warn(res.message ? res.message : '保存失败');
-          }, 500)).catch(() => {
-            this.update = false;
-          })
-        }
+        if (this.mode === 'add') this.$api.mark.addGroup(form).then(res => this.complete(res, '保存', true)).catch(() => this.error())
+        else this.$api.mark.updateGroup(id, form).then(res => this.complete(res, '保存', false)).catch(() => this.error())
+      } else if (this.type === 4 || this.type === 5) {
+        this.update = true;
+        if (this.mode === 'add') this.$api.mark.add(form).then(res => this.complete(res, '保存', true)).catch(() => this.error())
+        else this.$api.mark.update(id, form).then(res => this.complete(res, '保存', false)).catch(() => this.error())
       }
     },
-    remove(){
+    remove() {
       this.$modal.confirm({
         title: '确认要删除吗?',
         content: '此操作不可逆, 数据在删除后无法恢复, 确认删除?',
@@ -307,21 +298,38 @@ export default {
         cancelText: '取消',
         onOk: () => {
           this.update = true;
-          if (this.type === 3) {
-            this.$api.mark.removeGroup(this.id).then(res => setTimeout(() => {
-              this.update = false;
-              if (res.state) {
-                this.$message.success('删除成功');
-                this.$emit("update", {});
-                this.visible = false;
-                this.close();
-              } else this.$message.warn(res.message ? res.message : '删除失败');
-            }, 500)).catch(() => {
-              this.update = false;
-            })
-          }
+          if (this.type === 3)
+            this.$api.mark.removeGroup(this.id).then(res => this.complete(res, '删除', true)).catch(() => this.error())
+          else if (this.type === 4 || this.type === 5)
+            this.$api.mark.remove(this.id).then(res => this.complete(res, '删除', true)).catch(() => this.error())
         },
       })
+    },
+    completeLoad(res, cleanData) {
+      setTimeout(() => {
+        if (res.state) {
+          this.loading = false;
+          res.data = cleanData(res.data);
+          this.form[this.type - 1] = res.data;
+        } else {
+          this.exit();
+          this.$message.warn(res.message ? res.message : '加载失败');
+        }
+      }, 500)
+    },
+    complete(res, action, back) {
+      setTimeout(() => {
+        this.update = false;
+        if (res.state) {
+          this.$message.success(action + '成功');
+          this.$emit("update", {});
+          if (back) this.exit();
+          else this.loadData();
+        } else this.$message.warn(res.message ? res.message : action + '失败');
+      }, 500)
+    },
+    error() {
+      this.update = false;
     }
   }
 }
